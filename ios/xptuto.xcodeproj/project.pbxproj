@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F43DD9452469E03100BF5BDD /* xptuto_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F43DD93E2469E03100BF5BDD /* xptuto_impl.cpp */; };
 		F4AB7909245E06E100043156 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = F4AB7908245E06E100043156 /* AppDelegate.mm */; };
 		F4AB790C245E06E100043156 /* SceneDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = F4AB790B245E06E100043156 /* SceneDelegate.mm */; };
 		F4AB790F245E06E100043156 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F4AB790E245E06E100043156 /* ViewController.mm */; };
@@ -18,6 +19,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F43DD93E2469E03100BF5BDD /* xptuto_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xptuto_impl.cpp; sourceTree = "<group>"; };
+		F43DD93F2469E03100BF5BDD /* xptuto_impl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xptuto_impl.hpp; sourceTree = "<group>"; };
+		F43DD9422469E03100BF5BDD /* user.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = user.hpp; sourceTree = "<group>"; };
+		F43DD9432469E03100BF5BDD /* xptuto.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xptuto.hpp; sourceTree = "<group>"; };
+		F43DD9442469E03100BF5BDD /* repo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = repo.hpp; sourceTree = "<group>"; };
 		F4AB7904245E06E100043156 /* xptuto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xptuto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4AB7907245E06E100043156 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F4AB7908245E06E100043156 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
@@ -45,6 +51,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F43DD93C2469E03100BF5BDD /* src */ = {
+			isa = PBXGroup;
+			children = (
+				F43DD93D2469E03100BF5BDD /* impl */,
+				F43DD9412469E03100BF5BDD /* gen */,
+			);
+			name = src;
+			path = ../../common/src;
+			sourceTree = "<group>";
+		};
+		F43DD93D2469E03100BF5BDD /* impl */ = {
+			isa = PBXGroup;
+			children = (
+				F43DD93E2469E03100BF5BDD /* xptuto_impl.cpp */,
+				F43DD93F2469E03100BF5BDD /* xptuto_impl.hpp */,
+			);
+			path = impl;
+			sourceTree = "<group>";
+		};
+		F43DD9412469E03100BF5BDD /* gen */ = {
+			isa = PBXGroup;
+			children = (
+				F43DD9422469E03100BF5BDD /* user.hpp */,
+				F43DD9432469E03100BF5BDD /* xptuto.hpp */,
+				F43DD9442469E03100BF5BDD /* repo.hpp */,
+			);
+			path = gen;
+			sourceTree = "<group>";
+		};
 		F4AB78FB245E06E100043156 = {
 			isa = PBXGroup;
 			children = (
@@ -65,6 +100,7 @@
 		F4AB7906245E06E100043156 /* xptuto */ = {
 			isa = PBXGroup;
 			children = (
+				F43DD93C2469E03100BF5BDD /* src */,
 				F4AB7907245E06E100043156 /* AppDelegate.h */,
 				F4AB7908245E06E100043156 /* AppDelegate.mm */,
 				F4AB790A245E06E100043156 /* SceneDelegate.h */,
@@ -161,6 +197,7 @@
 				F4AB790F245E06E100043156 /* ViewController.mm in Sources */,
 				F4AB7909245E06E100043156 /* AppDelegate.mm in Sources */,
 				F4AB791A245E06E900043156 /* main.mm in Sources */,
+				F43DD9452469E03100BF5BDD /* xptuto_impl.cpp in Sources */,
 				F4AB790C245E06E100043156 /* SceneDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

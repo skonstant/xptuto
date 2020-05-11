@@ -9,5 +9,4 @@ if(EMSCRIPTEN)
     add_subdirectory(web)
 endif(EMSCRIPTEN)
 
-# when we have sources
-# add_subdirectory(common/src)
+add_subdirectory(common/src)

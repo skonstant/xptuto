@@ -8,15 +8,22 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
+#include "xptuto.hpp"
+#include "user.hpp"
 
-@end
+using namespace xptuto;
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+
+    auto x = Xptuto::make_instance();
+    for (const auto &user : x->get_users()) {
+        NSLog(@"Got user with name: %s", user.name.c_str());
+    }
+
+
 }
 
 

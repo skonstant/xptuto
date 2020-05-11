@@ -40,6 +40,8 @@ djinni_cmd = ("{base_dir}/deps/djinni/src/run-assume-built "
               "--java-out {temp_out}/java "
               "--java-package {java_package} "
               "--jni-out {temp_out}/jni "
+              "--ident-jni-class NativeFooBar "
+              "--ident-jni-file native_foo_bar "
               "--idl {in_file} ")
 
 def mirror(prefix, from_path, to_path):

@@ -1,0 +1,40 @@
+user = record {
+    login: string;
+    id: i64;
+    avatar_url: string;
+    gravatar_id: string;
+    url: string;
+    html_url: string;
+    type: string;
+    site_admin: bool;
+    name: string;
+    company: string;
+    bio: string;
+    public_repos: i32;
+    public_gists: i32;
+    followers: i64;
+    following: i64;
+    created_at: date;
+    updated_at: date;
+}
+
+repo = record {
+    id: i32;
+    name: string;
+    full_name: string;
+    owner: user;
+    priv: bool;
+    html_url: string;
+    descr: string;
+    created_at: date;
+    updated_at: date;
+    pushed_at: date;
+}
+
+xptuto = interface +c {
+    static make_instance() : xptuto;
+
+    get_users() : list<user>;
+
+    get_repos_for_user(u: user) : list<repo>;
+}

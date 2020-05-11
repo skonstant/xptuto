@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(xpcommon)
 
+include_directories(gen)
+
 file(GLOB_RECURSE SRC "*.cpp")
 file(GLOB_RECURSE HDR "*.h")
 file(GLOB_RECURSE HDR_GEN "*.hpp")
