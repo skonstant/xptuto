@@ -12,5 +12,3 @@
 /captures
 .externalNativeBuild
 .cxx
-/app/src/main/gen_java/
-/app/src/main/cpp/gen/
