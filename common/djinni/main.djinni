@@ -1,8 +1,8 @@
 user = record {
     login: string;
-    id: i64;
+    id: i32;
     avatar_url: string;
-    gravatar_id: string;
+    gravatar_id: optional<string>;
     url: string;
     html_url: string;
     type: string;
@@ -12,8 +12,8 @@ user = record {
     bio: string;
     public_repos: i32;
     public_gists: i32;
-    followers: i64;
-    following: i64;
+    followers: i32;
+    following: i32;
     created_at: date;
     updated_at: date;
 }

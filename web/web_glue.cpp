@@ -1,16 +1,47 @@
 // when we have stuff to marshall
 #include <emscripten.h>
 #include <emscripten/bind.h>
-
+#include <optional>
 #include <user.hpp>
 #include <repo.hpp>
 #include <xptuto.hpp>
 
 using namespace xptuto;
 
+template<typename OptionalType>
+struct OptionalAccess {
+    static emscripten::val value(
+            const OptionalType &v) {
+        return emscripten::val(v.value());
+    }
+
+    static bool has_value(OptionalType &v) {
+        return v.has_value();
+    }
+};
+
+template<typename V>
+emscripten::class_<std::optional<V>> register_optional(const char *name) {
+    typedef std::optional<V> OptionalType;
+
+    return emscripten::class_<std::optional<V>>(name)
+            .function("value", &OptionalAccess<OptionalType>::value)
+            .function("has_value", &OptionalAccess<OptionalType>::has_value);
+}
+
+emscripten::val toJsDate(std::chrono::system_clock::time_point timePoint) {
+    return emscripten::val(
+            (long) (std::chrono::duration_cast<std::chrono::seconds>(timePoint.time_since_epoch())).count());
+}
+
+
 EMSCRIPTEN_BINDINGS(xptuto) {
     emscripten::register_vector<User>("VectorUser");
     emscripten::register_vector<Repo>("VectorRepo");
+    register_optional<std::string>("OptionalString");
+
+    emscripten::class_<std::chrono::system_clock::time_point>("TimePoint")
+            .function("sec", &toJsDate);
 
     emscripten::class_<User>("User")
             .property("login", &User::login)
