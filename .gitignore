@@ -1,2 +1,8 @@
 /cmake-build-debug/
 /scripts/djinni-output-api-temp/
+/build/
+/cmake-build-debug-emscripten/
+/Debug/
+/ios/xptuto.xcodeproj/project.xcworkspace/xcuserdata/
+/ios/xptuto.xcodeproj/xcuserdata/
+/CMakeLists.txt.user
