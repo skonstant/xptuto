@@ -10,3 +10,4 @@ if(EMSCRIPTEN)
 endif(EMSCRIPTEN)
 
 add_subdirectory(common/src)
+add_subdirectory(test)
