@@ -30,7 +30,10 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
+include_directories(../common/src/gen)
+
+file(GLOB_RECURSE SRC "*.cpp")
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(example example.cpp)
-target_link_libraries(example gtest_main)
-add_test(NAME example_test COMMAND example)
+add_executable(xptutotest ${SRC})
+target_link_libraries(xptutotest gtest_main xpcommon)
+add_test(NAME xptuto_test COMMAND xptutotest)
