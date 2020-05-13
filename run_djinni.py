@@ -4,13 +4,14 @@
 import os
 import shutil
 import sys
+import tempfile
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 base_dir = os.path.normpath(script_dir)
 djinni_dir = base_dir + "/common/djinni"
 
 api_in = djinni_dir + "/main.djinni"
-api_temp_out = base_dir + "/scripts/djinni-output-api-temp"
+api_temp_out = tempfile.gettempdir() + "/djinni-output-api-temp"
 api_java_package = "org.example.xptuto"
 api_gen_stamp = api_temp_out + "/gen.api.stamp"
 api_cpp_out = base_dir + "/common/src/gen"

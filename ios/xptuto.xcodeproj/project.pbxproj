@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F43DD9452469E03100BF5BDD /* xptuto_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F43DD93E2469E03100BF5BDD /* xptuto_impl.cpp */; };
+		552E8B9DA012EBD2A6E85A31 /* xptuto_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 552E8902D059B3B1BDA731FB /* xptuto_impl.cpp */; };
 		F4AB7909245E06E100043156 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = F4AB7908245E06E100043156 /* AppDelegate.mm */; };
 		F4AB790C245E06E100043156 /* SceneDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = F4AB790B245E06E100043156 /* SceneDelegate.mm */; };
 		F4AB790F245E06E100043156 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F4AB790E245E06E100043156 /* ViewController.mm */; };
@@ -19,11 +19,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F43DD93E2469E03100BF5BDD /* xptuto_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xptuto_impl.cpp; sourceTree = "<group>"; };
-		F43DD93F2469E03100BF5BDD /* xptuto_impl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xptuto_impl.hpp; sourceTree = "<group>"; };
-		F43DD9422469E03100BF5BDD /* user.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = user.hpp; sourceTree = "<group>"; };
-		F43DD9432469E03100BF5BDD /* xptuto.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xptuto.hpp; sourceTree = "<group>"; };
-		F43DD9442469E03100BF5BDD /* repo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = repo.hpp; sourceTree = "<group>"; };
+		552E865DC5EA54049B73D80F /* xptuto.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xptuto.hpp; sourceTree = "<group>"; };
+		552E887A408B5344D202ABC8 /* user.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = user.hpp; sourceTree = "<group>"; };
+		552E8902D059B3B1BDA731FB /* xptuto_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xptuto_impl.cpp; sourceTree = "<group>"; };
+		552E8A2D2F1B125EE62303E2 /* repo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = repo.hpp; sourceTree = "<group>"; };
+		552E8FB32EE41F47FED70338 /* xptuto_impl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xptuto_impl.hpp; sourceTree = "<group>"; };
 		F4AB7904245E06E100043156 /* xptuto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xptuto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4AB7907245E06E100043156 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F4AB7908245E06E100043156 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
@@ -51,33 +51,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F43DD93C2469E03100BF5BDD /* src */ = {
+		552E89D046455E9B82FD90FB /* src */ = {
 			isa = PBXGroup;
 			children = (
-				F43DD93D2469E03100BF5BDD /* impl */,
-				F43DD9412469E03100BF5BDD /* gen */,
+				552E8B48DF66484F481C78C1 /* gen */,
+				552E8EEA3AA6FDC77E4E6D50 /* impl */,
 			);
 			name = src;
-			path = ../../common/src;
+			path = common_src;
 			sourceTree = "<group>";
 		};
-		F43DD93D2469E03100BF5BDD /* impl */ = {
+		552E8B48DF66484F481C78C1 /* gen */ = {
 			isa = PBXGroup;
 			children = (
-				F43DD93E2469E03100BF5BDD /* xptuto_impl.cpp */,
-				F43DD93F2469E03100BF5BDD /* xptuto_impl.hpp */,
-			);
-			path = impl;
-			sourceTree = "<group>";
-		};
-		F43DD9412469E03100BF5BDD /* gen */ = {
-			isa = PBXGroup;
-			children = (
-				F43DD9422469E03100BF5BDD /* user.hpp */,
-				F43DD9432469E03100BF5BDD /* xptuto.hpp */,
-				F43DD9442469E03100BF5BDD /* repo.hpp */,
+				552E8A2D2F1B125EE62303E2 /* repo.hpp */,
+				552E887A408B5344D202ABC8 /* user.hpp */,
+				552E865DC5EA54049B73D80F /* xptuto.hpp */,
 			);
 			path = gen;
+			sourceTree = "<group>";
+		};
+		552E8EEA3AA6FDC77E4E6D50 /* impl */ = {
+			isa = PBXGroup;
+			children = (
+				552E8902D059B3B1BDA731FB /* xptuto_impl.cpp */,
+				552E8FB32EE41F47FED70338 /* xptuto_impl.hpp */,
+			);
+			path = impl;
 			sourceTree = "<group>";
 		};
 		F4AB78FB245E06E100043156 = {
@@ -100,7 +100,6 @@
 		F4AB7906245E06E100043156 /* xptuto */ = {
 			isa = PBXGroup;
 			children = (
-				F43DD93C2469E03100BF5BDD /* src */,
 				F4AB7907245E06E100043156 /* AppDelegate.h */,
 				F4AB7908245E06E100043156 /* AppDelegate.mm */,
 				F4AB790A245E06E100043156 /* SceneDelegate.h */,
@@ -112,6 +111,7 @@
 				F4AB7915245E06E900043156 /* LaunchScreen.storyboard */,
 				F4AB7918245E06E900043156 /* Info.plist */,
 				F4AB7919245E06E900043156 /* main.mm */,
+				552E89D046455E9B82FD90FB /* src */,
 			);
 			path = xptuto;
 			sourceTree = "<group>";
@@ -197,8 +197,8 @@
 				F4AB790F245E06E100043156 /* ViewController.mm in Sources */,
 				F4AB7909245E06E100043156 /* AppDelegate.mm in Sources */,
 				F4AB791A245E06E900043156 /* main.mm in Sources */,
-				F43DD9452469E03100BF5BDD /* xptuto_impl.cpp in Sources */,
 				F4AB790C245E06E100043156 /* SceneDelegate.mm in Sources */,
+				552E8B9DA012EBD2A6E85A31 /* xptuto_impl.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,8 +338,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CC = "ccache-clang";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_STYLE = Automatic;
+				CPLUSPLUS = "ccache-clang++";
 				DEVELOPMENT_TEAM = H59Q47N6F3;
 				INFOPLIST_FILE = xptuto/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -356,8 +359,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CC = "ccache-clang";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_STYLE = Automatic;
+				CPLUSPLUS = "ccache-clang++";
 				DEVELOPMENT_TEAM = H59Q47N6F3;
 				INFOPLIST_FILE = xptuto/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
