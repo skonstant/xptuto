@@ -15,6 +15,7 @@ public:
                      std::function<void(const std::string &)> failureFn);
 
     void on_response(const xptuto::HttpResponse &response) override;
+
     void on_failure(const std::string &reason) override;
 
 private:

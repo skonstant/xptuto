@@ -40,13 +40,13 @@ TEST_F(Xptuto, GetUsersEmptyTest) {
     auto p = promise;
 
     instance->get_users(std::make_shared<GetUsersCbImpl>(
-            [p](const std::vector<xptuto::User> &users){
-                EXPECT_FALSE( users.empty());
+            [p](const std::vector<xptuto::User> &users) {
+                EXPECT_FALSE(users.empty());
                 p->set_value();
-            }, [p](const std::string &){
+            }, [p](const std::string &) {
                 FAIL();
             }
-            ));
+    ));
     if (future.wait_for(1s) != std::future_status::ready) {
         FAIL();
     }
@@ -60,10 +60,10 @@ TEST_F(Xptuto, GetUsersCountTest) {
     auto p = promise;
 
     instance->get_users(std::make_shared<GetUsersCbImpl>(
-            [p](const std::vector<xptuto::User> &users){
-                EXPECT_FALSE( users.empty());
+            [p](const std::vector<xptuto::User> &users) {
+                EXPECT_FALSE(users.empty());
                 p->set_value();
-            }, [p](const std::string &){
+            }, [p](const std::string &) {
                 FAIL();
             }
     ));
@@ -79,10 +79,10 @@ TEST_F(Xptuto, GetUsersNameTest) {
     auto p = promise;
 
     instance->get_users(std::make_shared<GetUsersCbImpl>(
-            [p](const std::vector<xptuto::User> &users){
-                EXPECT_EQ("sKonstan",users.front().login);
+            [p](const std::vector<xptuto::User> &users) {
+                EXPECT_EQ("sKonstan", users.front().login);
                 p->set_value();
-            }, [p](const std::string &){
+            }, [p](const std::string &) {
                 FAIL();
             }
     ));

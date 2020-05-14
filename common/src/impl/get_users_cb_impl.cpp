@@ -9,7 +9,7 @@
 
 GetUsersCbImpl::GetUsersCbImpl(std::function<void(const std::vector<xptuto::User> &)> successFn,
                                std::function<void(const std::string &)> failureFn) : successFn(std::move(successFn)),
-                                                                                            failureFn(std::move(failureFn)) {}
+                                                                                     failureFn(std::move(failureFn)) {}
 
 void GetUsersCbImpl::on_success(const std::vector<xptuto::User> &users) {
     successFn(users);

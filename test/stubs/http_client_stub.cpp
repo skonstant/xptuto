@@ -17,7 +17,7 @@ using namespace xptuto;
 void HttpClientStub::get(const std::string &url, const std::shared_ptr<HttpCallback> &callback) {
     auto p = path.value();
 
-    std::thread t([p] (const std::shared_ptr<xptuto::HttpCallback> &cb) {
+    std::thread t([p](const std::shared_ptr<xptuto::HttpCallback> &cb) {
         auto stream = std::ifstream(std::string(TEST_PATH) + p);
         auto response = std::string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
         cb->on_response({response, 200});

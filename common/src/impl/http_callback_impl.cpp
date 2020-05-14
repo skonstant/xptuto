@@ -7,8 +7,10 @@
 #include <utility>
 
 HttpCallbackImpl::HttpCallbackImpl(std::function<void(const xptuto::HttpResponse &)> successFn,
-                                   std::function<void(const std::string &)> failureFn) : successFn(std::move(successFn)),
-                                                                                         failureFn(std::move(failureFn)) {}
+                                   std::function<void(const std::string &)> failureFn) : successFn(
+        std::move(successFn)),
+                                                                                         failureFn(std::move(
+                                                                                                 failureFn)) {}
 
 void HttpCallbackImpl::on_response(const xptuto::HttpResponse &response) {
     successFn(response);

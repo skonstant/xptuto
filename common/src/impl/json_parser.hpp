@@ -16,7 +16,7 @@ namespace nlohmann {
         static User from_json(const json &j) {
             return {j["login"].get<std::string>(), j["id"].get<int32_t>(),
                     j["avatar_url"].get<std::string>(),
-                            std::chrono::system_clock::now()}; //TOOD parse time
+                    std::chrono::system_clock::now()}; //TOOD parse time
         }
 
         static void to_json(json &j, User t) {

@@ -14,26 +14,26 @@
 using namespace xptuto;
 using namespace std::chrono_literals;
 
-std::shared_ptr<Xptuto> xptuto::Xptuto::make_instance(const std::shared_ptr<HttpClient> & client) {
+std::shared_ptr<Xptuto> xptuto::Xptuto::make_instance(const std::shared_ptr<HttpClient> &client) {
     return std::make_shared<XptutoImpl>(client);
 }
 
-XptutoImpl::XptutoImpl(std::shared_ptr<xptuto::HttpClient>  cl) : client(std::move(cl)) {}
+XptutoImpl::XptutoImpl(std::shared_ptr<xptuto::HttpClient> cl) : client(std::move(cl)) {}
 
-void XptutoImpl::get_users(const std::shared_ptr<GetUsersCb> & cb) {
-    client->get("https://api.github.com/users/aosp" ,
-                    std::make_shared<HttpCallbackImpl>([cb](const xptuto::HttpResponse &response) {
-                        if (response.body && !std::empty(*response.body)) {
-                            User user = nlohmann::json::parse(*response.body);
-                            cb->on_success({user});
-                        } else {
-                            cb->on_error("error"); //TODO check HTTP code
-                        }
-                    }, [cb](const std::string &) {
-                        cb->on_error("error");
-                    }));
+void XptutoImpl::get_users(const std::shared_ptr<GetUsersCb> &cb) {
+    client->get("https://api.github.com/users/aosp",
+                std::make_shared<HttpCallbackImpl>([cb](const xptuto::HttpResponse &response) {
+                    if (response.body && !std::empty(*response.body)) {
+                        User user = nlohmann::json::parse(*response.body);
+                        cb->on_success({user});
+                    } else {
+                        cb->on_error("error"); //TODO check HTTP code
+                    }
+                }, [cb](const std::string &) {
+                    cb->on_error("error");
+                }));
 }
 
-void XptutoImpl::get_repos_for_user(const std::shared_ptr<GetReposCb> & cb) {
+void XptutoImpl::get_repos_for_user(const std::shared_ptr<GetReposCb> &cb) {
 
 }
