@@ -9,7 +9,6 @@
 #include <get_users_cb_impl.hpp>
 #include "http_response.hpp"
 
-#include <thread>
 #include <future>
 
 using namespace std::chrono_literals;
