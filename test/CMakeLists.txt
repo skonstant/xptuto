@@ -30,7 +30,9 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
-include_directories(../common/src/gen)
+add_compile_definitions(TEST_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
+
+include_directories(../common/src/gen ../common/src/impl)
 
 file(GLOB_RECURSE SRC "*.cpp")
 # Now simply link against gtest or gtest_main as needed. Eg

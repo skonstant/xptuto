@@ -2,20 +2,7 @@ user = record {
     login: string;
     id: i32;
     avatar_url: string;
-    gravatar_id: optional<string>;
-    url: string;
-    html_url: string;
-    type: string;
-    site_admin: bool;
-    name: string;
-    company: string;
-    bio: string;
-    public_repos: i32;
-    public_gists: i32;
-    followers: i32;
-    following: i32;
     created_at: date;
-    updated_at: date;
 }
 
 repo = record {
@@ -31,10 +18,37 @@ repo = record {
     pushed_at: date;
 }
 
+get_users_cb = interface +j +c {
+    on_success(users : list<user>);
+    on_error(error: string);
+}
+
+get_repos_cb = interface +j +c {
+    on_success(repos : list<repo>, u: user);
+    on_error(error: string);
+}
+
 xptuto = interface +c {
-    static make_instance() : xptuto;
+    static make_instance(client: http_client) : xptuto;
 
-    get_users() : list<user>;
+    get_users(cb : get_users_cb);
 
-    get_repos_for_user(u: user) : list<repo>;
+    get_repos_for_user(cb: get_repos_cb);
+}
+
+http_response = record {
+    body: optional<string>;
+    code: i16;
+}
+
+http_callback = interface +c {
+
+    on_failure(reason: string);
+
+    on_response(response: http_response);
+
+}
+
+http_client = interface +j +c {
+    get(url: string, callback: http_callback);
 }

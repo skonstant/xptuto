@@ -4,55 +4,36 @@
 
 #include "xptuto_impl.hpp"
 
+#include <utility>
+#include "http_client.hpp"
+#include "http_callback_impl.hpp"
+#include "get_users_cb.hpp"
+#include "json_parser.hpp"
+#include "http_response.hpp"
+
 using namespace xptuto;
 using namespace std::chrono_literals;
 
-std::shared_ptr<Xptuto> xptuto::Xptuto::make_instance() {
-    return std::make_shared<XptutoImpl>();
+std::shared_ptr<Xptuto> xptuto::Xptuto::make_instance(const std::shared_ptr<HttpClient> & client) {
+    return std::make_shared<XptutoImpl>(client);
 }
 
-std::vector<User> XptutoImpl::get_users() {
-    return {
-            User("sKonstan",
-                 18196480,
-                 "https://avatars2.githubusercontent.com/u/18196480?v=4",
-                 std::nullopt,
-                 "https://api.github.com/users/sKonstan",
-                 "https://github.com/sKonstan",
-                 "User",
-                 false,
-                 "Stéphane",
-                 "none",
-                 "easy rider",
-                 1,
-                 0,
-                 0,
-                 0,
-            std::chrono::system_clock::now() - 10h,
-                    std::chrono::system_clock::now() - 1h
-            ),
-            User(
-                    "mchiasson",
-            961637,
-            "https://avatars1.githubusercontent.com/u/961637?v=4",
-            "",
-            "https://api.github.com/users/mchiasson",
-            "https://github.com/mchiasson",
-            "User",
-            false,
-            "Matt Chiasson",
-            "Canopy Growth",
-            "",
-            63,
-            0,
-            5,
-            0,
-                    std::chrono::system_clock::now() - 15h,
-                    std::chrono::system_clock::now() - 3h
-            )
-    };
+XptutoImpl::XptutoImpl(std::shared_ptr<xptuto::HttpClient>  cl) : client(std::move(cl)) {}
+
+void XptutoImpl::get_users(const std::shared_ptr<GetUsersCb> & cb) {
+    client->get("https://api.github.com/users/aosp" ,
+                    std::make_shared<HttpCallbackImpl>([cb](const xptuto::HttpResponse &response) {
+                        if (response.body && !std::empty(*response.body)) {
+                            User user = nlohmann::json::parse(*response.body);
+                            cb->on_success({user});
+                        } else {
+                            cb->on_error("error"); //TODO check HTTP code
+                        }
+                    }, [cb](const std::string &) {
+                        cb->on_error("error");
+                    }));
 }
 
-std::vector<Repo> XptutoImpl::get_repos_for_user(const User & u) {
-    return {};
+void XptutoImpl::get_repos_for_user(const std::shared_ptr<GetReposCb> & cb) {
+
 }

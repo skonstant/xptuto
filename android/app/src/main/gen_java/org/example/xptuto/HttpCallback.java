@@ -5,17 +5,12 @@ package org.example.xptuto;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class Xptuto {
-    public abstract void getUsers(GetUsersCb cb);
+public abstract class HttpCallback {
+    public abstract void onFailure(String reason);
 
-    public abstract void getReposForUser(GetReposCb cb);
+    public abstract void onResponse(HttpResponse response);
 
-    public static Xptuto makeInstance(HttpClient client)
-    {
-        return CppProxy.makeInstance(client);
-    }
-
-    private static final class CppProxy extends Xptuto
+    private static final class CppProxy extends HttpCallback
     {
         private final long nativeRef;
         private final AtomicBoolean destroyed = new AtomicBoolean(false);
@@ -39,21 +34,19 @@ public abstract class Xptuto {
         }
 
         @Override
-        public void getUsers(GetUsersCb cb)
+        public void onFailure(String reason)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_getUsers(this.nativeRef, cb);
+            native_onFailure(this.nativeRef, reason);
         }
-        private native void native_getUsers(long _nativeRef, GetUsersCb cb);
+        private native void native_onFailure(long _nativeRef, String reason);
 
         @Override
-        public void getReposForUser(GetReposCb cb)
+        public void onResponse(HttpResponse response)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_getReposForUser(this.nativeRef, cb);
+            native_onResponse(this.nativeRef, response);
         }
-        private native void native_getReposForUser(long _nativeRef, GetReposCb cb);
-
-        public static native Xptuto makeInstance(HttpClient client);
+        private native void native_onResponse(long _nativeRef, HttpResponse response);
     }
 }

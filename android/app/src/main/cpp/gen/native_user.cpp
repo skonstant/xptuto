@@ -16,45 +16,19 @@ auto NativeUser::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni::LocalRef
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.login)),
                                                            ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.id)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.avatar_url)),
-                                                           ::djinni::get(::djinni::Optional<std::optional, ::djinni::String>::fromCpp(jniEnv, c.gravatar_id)),
-                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.url)),
-                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.html_url)),
-                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.type)),
-                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.site_admin)),
-                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.name)),
-                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.company)),
-                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.bio)),
-                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.public_repos)),
-                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.public_gists)),
-                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.followers)),
-                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.following)),
-                                                           ::djinni::get(::djinni::Date::fromCpp(jniEnv, c.created_at)),
-                                                           ::djinni::get(::djinni::Date::fromCpp(jniEnv, c.updated_at)))};
+                                                           ::djinni::get(::djinni::Date::fromCpp(jniEnv, c.created_at)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
 
 auto NativeUser::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 18);
+    ::djinni::JniLocalScope jscope(jniEnv, 5);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeUser>::get();
     return {::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_login)),
             ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_id)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_avatarUrl)),
-            ::djinni::Optional<std::optional, ::djinni::String>::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_gravatarId)),
-            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_url)),
-            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_htmlUrl)),
-            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_type)),
-            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_siteAdmin)),
-            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_name)),
-            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_company)),
-            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_bio)),
-            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_publicRepos)),
-            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_publicGists)),
-            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_followers)),
-            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_following)),
-            ::djinni::Date::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_createdAt)),
-            ::djinni::Date::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_updatedAt))};
+            ::djinni::Date::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_createdAt))};
 }
 
 }  // namespace djinni_generated

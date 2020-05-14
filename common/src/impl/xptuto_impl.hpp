@@ -9,11 +9,19 @@
 #include "user.hpp"
 #include "repo.hpp"
 
-class XptutoImpl : public xptuto::Xptuto {
+class XptutoImpl : public xptuto::Xptuto , public std::enable_shared_from_this<XptutoImpl> {
 
-    std::vector<xptuto::User> get_users() override;
+public:
+    explicit XptutoImpl(std::shared_ptr<xptuto::HttpClient>  client);
 
-    std::vector<xptuto::Repo> get_repos_for_user(const xptuto::User & u) override;
+private:
+
+    void get_users(const std::shared_ptr<xptuto::GetUsersCb> & cb) override;
+
+    void get_repos_for_user(const std::shared_ptr<xptuto::GetReposCb> & cb) override;
+
+private:
+    const std::shared_ptr<xptuto::HttpClient> client;
 
 };
 

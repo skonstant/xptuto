@@ -14,69 +14,17 @@ public final class User {
 
     /*package*/ final String avatarUrl;
 
-    /*package*/ final String gravatarId;
-
-    /*package*/ final String url;
-
-    /*package*/ final String htmlUrl;
-
-    /*package*/ final String type;
-
-    /*package*/ final boolean siteAdmin;
-
-    /*package*/ final String name;
-
-    /*package*/ final String company;
-
-    /*package*/ final String bio;
-
-    /*package*/ final int publicRepos;
-
-    /*package*/ final int publicGists;
-
-    /*package*/ final int followers;
-
-    /*package*/ final int following;
-
     /*package*/ final Date createdAt;
-
-    /*package*/ final Date updatedAt;
 
     public User(
             String login,
             int id,
             String avatarUrl,
-            String gravatarId,
-            String url,
-            String htmlUrl,
-            String type,
-            boolean siteAdmin,
-            String name,
-            String company,
-            String bio,
-            int publicRepos,
-            int publicGists,
-            int followers,
-            int following,
-            Date createdAt,
-            Date updatedAt) {
+            Date createdAt) {
         this.login = login;
         this.id = id;
         this.avatarUrl = avatarUrl;
-        this.gravatarId = gravatarId;
-        this.url = url;
-        this.htmlUrl = htmlUrl;
-        this.type = type;
-        this.siteAdmin = siteAdmin;
-        this.name = name;
-        this.company = company;
-        this.bio = bio;
-        this.publicRepos = publicRepos;
-        this.publicGists = publicGists;
-        this.followers = followers;
-        this.following = following;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public String getLogin() {
@@ -91,60 +39,8 @@ public final class User {
         return avatarUrl;
     }
 
-    public String getGravatarId() {
-        return gravatarId;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getHtmlUrl() {
-        return htmlUrl;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public boolean getSiteAdmin() {
-        return siteAdmin;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public int getPublicRepos() {
-        return publicRepos;
-    }
-
-    public int getPublicGists() {
-        return publicGists;
-    }
-
-    public int getFollowers() {
-        return followers;
-    }
-
-    public int getFollowing() {
-        return following;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
     }
 
     @Override
@@ -153,20 +49,7 @@ public final class User {
                 "login=" + login +
                 "," + "id=" + id +
                 "," + "avatarUrl=" + avatarUrl +
-                "," + "gravatarId=" + gravatarId +
-                "," + "url=" + url +
-                "," + "htmlUrl=" + htmlUrl +
-                "," + "type=" + type +
-                "," + "siteAdmin=" + siteAdmin +
-                "," + "name=" + name +
-                "," + "company=" + company +
-                "," + "bio=" + bio +
-                "," + "publicRepos=" + publicRepos +
-                "," + "publicGists=" + publicGists +
-                "," + "followers=" + followers +
-                "," + "following=" + following +
                 "," + "createdAt=" + createdAt +
-                "," + "updatedAt=" + updatedAt +
         "}";
     }
 

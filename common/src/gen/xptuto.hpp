@@ -4,22 +4,22 @@
 #pragma once
 
 #include <memory>
-#include <vector>
 
 namespace xptuto {
 
-struct Repo;
-struct User;
+class GetReposCb;
+class GetUsersCb;
+class HttpClient;
 
 class Xptuto {
 public:
     virtual ~Xptuto() {}
 
-    static std::shared_ptr<Xptuto> make_instance();
+    static std::shared_ptr<Xptuto> make_instance(const std::shared_ptr<HttpClient> & client);
 
-    virtual std::vector<User> get_users() = 0;
+    virtual void get_users(const std::shared_ptr<GetUsersCb> & cb) = 0;
 
-    virtual std::vector<Repo> get_repos_for_user(const User & u) = 0;
+    virtual void get_repos_for_user(const std::shared_ptr<GetReposCb> & cb) = 0;
 };
 
 }  // namespace xptuto
