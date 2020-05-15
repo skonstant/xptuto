@@ -39,14 +39,18 @@ file(GLOB_RECURSE SRC "*.cpp")
 add_executable(xptutotest ${SRC})
 
 
-if(EMSCRIPTEN)
+if (EMSCRIPTEN)
     set_target_properties(xptutotest PROPERTIES LINK_FLAGS " -s USE_PTHREADS=1 -s ALLOW_BLOCKING_ON_MAIN_THREAD=1 -s PTHREAD_POOL_SIZE=2 --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/responses -s FETCH=1 ")
     set_target_properties(xptutotest PROPERTIES COMPILE_FLAGS " -s USE_PTHREADS=1 -s ALLOW_BLOCKING_ON_MAIN_THREAD=1 -s PTHREAD_POOL_SIZE=2 ")
     set_target_properties(xpcommon PROPERTIES COMPILE_FLAGS " -s USE_PTHREADS=1 -s ALLOW_BLOCKING_ON_MAIN_THREAD=1 -s PTHREAD_POOL_SIZE=2 ")
     set_target_properties(gtest_main PROPERTIES COMPILE_FLAGS " -s USE_PTHREADS=1 -s ALLOW_BLOCKING_ON_MAIN_THREAD=1 -s PTHREAD_POOL_SIZE=2 ")
     set_target_properties(gtest PROPERTIES COMPILE_FLAGS " -s USE_PTHREADS=1 -s ALLOW_BLOCKING_ON_MAIN_THREAD=1 -s PTHREAD_POOL_SIZE=2 ")
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
-endif(EMSCRIPTEN)
+endif (EMSCRIPTEN)
 
-target_link_libraries(xptutotest gtest_main xpcommon)
+if (APPLE)
+    set(EXTRA_LIBS "-framework Foundation")
+endif (APPLE)
+
+target_link_libraries(xptutotest gtest_main xpcommon ${EXTRA_LIBS})
 add_test(NAME xptuto_test COMMAND xptutotest)

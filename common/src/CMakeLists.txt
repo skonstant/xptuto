@@ -6,6 +6,12 @@ include_directories(gen)
 file(GLOB_RECURSE SRC "*.cpp")
 file(GLOB_RECURSE HDR "*.h")
 file(GLOB_RECURSE HDR_GEN "*.hpp")
-
-add_library(xpcommon ${SRC} ${HDR} ${HDR_GEN})
+if (APPLE)
+    include_directories(objc)
+    add_library(xpcommon ${SRC} ${HDR} ${HDR_GEN} impl/apple_http_client.mm)
+    set_property(TARGET xpcommon APPEND_STRING PROPERTY
+            COMPILE_FLAGS "-fobjc-arc")
+else (APPLE)
+    add_library(xpcommon ${SRC} ${HDR} ${HDR_GEN})
+endif (APPLE)
 
