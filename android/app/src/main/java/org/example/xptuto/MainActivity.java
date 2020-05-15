@@ -1,10 +1,8 @@
 package org.example.xptuto;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,9 +16,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Xptuto x = Xptuto.makeInstance();
-        for (User u : x.getUsers()) {
-            Log.d("XP", "Got a user with name: " + u.name);
-        }
+        //Xptuto x = Xptuto.makeInstance();
+        //for (User u : x.getUsers()) {
+        //    Log.d("XP", "Got a user with name: " + u.name);
+        //}
     }
 }

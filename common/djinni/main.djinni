@@ -38,7 +38,7 @@ xptuto = interface +c {
 
 http_response = record {
     body: optional<string>;
-    code: i16;
+    code: i32;
 }
 
 http_callback = interface +c {
