@@ -90,5 +90,32 @@ TEST_F(Xptuto, GetUsersNameTest) {
     }
 }
 
+#ifdef EMSCRIPTEN
+
+#include "web_http_client.hpp"
+#include "http_callback_impl.hpp"
+
+TEST_F(Xptuto, WebGetUserTest) {
+    auto webHttp = std::make_shared<WebHttpClient>();
+
+    auto p = promise;
+
+    webHttp->get("https://api.github.com/users/aosp", std::make_shared<HttpCallbackImpl>(
+            [p](const xptuto::HttpResponse &response) {
+                EXPECT_EQ(response.code, 200);
+                p->set_value();
+            }, [p] (const std::string &) {
+                FAIL();
+            }));
+
+    if (future.wait_for(10s) != std::future_status::ready) {
+        FAIL();
+    }
+}
+
+
+
+#endif
+
 
 

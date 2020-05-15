@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <title>XP Tutorial</title>
     <script>
-    var Module = {
-      onRuntimeInitialized: function() {
-        var x = Module.Xptuto.make_instance();
-        var users = x.get_users();
-        for (var i = 0; i < users.size(); i++) {
-            console.log('Got a user with name: ' + users.get(i).name);
-        }
-      }
-    };
-  </script>
+        var Module = {
+            onRuntimeInitialized: function() {
+                var x = Module.createInstance();
+                x.get_users(new Module.JSGetUsersCb({
+                    on_error: function(error) {
+                        console.error(error)
+                    },
+                    on_success: function(users) {
+                        for (var i = 0; i < users.size(); i++) {
+                            console.log('Got a user with name: ' + users.get(i).login);
+                        }
+                    }
+                }));
+            }
+        };
+    </script>
     <script src="xptuto-web.js"></script>
 </head>
 <body>

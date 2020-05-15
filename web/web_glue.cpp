@@ -5,6 +5,9 @@
 #include <user.hpp>
 #include <repo.hpp>
 #include <xptuto.hpp>
+#include <get_users_cb.hpp>
+
+#include "web_http_client.hpp"
 
 using namespace xptuto;
 
@@ -34,11 +37,39 @@ emscripten::val toJsDate(std::chrono::system_clock::time_point timePoint) {
             (long) (std::chrono::duration_cast<std::chrono::seconds>(timePoint.time_since_epoch())).count());
 }
 
+std::shared_ptr<xptuto::Xptuto> createInstance() {
+    return xptuto::Xptuto::make_instance(std::make_shared<WebHttpClient>());
+}
+
+class JSInterface {
+
+public:
+    explicit JSInterface(emscripten::val callbacks) : myCallbacks(callbacks) {}
+
+    emscripten::val myCallbacks;
+};
+
+class JSGetUsersCb : public xptuto::GetUsersCb, JSInterface {
+public:
+    explicit JSGetUsersCb(emscripten::val callbacks) : JSInterface(std::move(callbacks)) {}
+
+    void on_success(const std::vector<User> &users) override {
+        emscripten::val on_successCB = myCallbacks["on_success"];
+        on_successCB(users);
+    }
+
+    void on_error(const std::string &error) override {
+        emscripten::val on_errorCB = myCallbacks["on_error"];
+        on_errorCB(error);
+    }
+};
 
 EMSCRIPTEN_BINDINGS(xptuto) {
     emscripten::register_vector<User>("VectorUser");
     emscripten::register_vector<Repo>("VectorRepo");
     register_optional<std::string>("OptionalString");
+
+    emscripten::function("createInstance", &createInstance);
 
     emscripten::class_<std::chrono::system_clock::time_point>("TimePoint")
             .function("sec", &toJsDate);
@@ -47,20 +78,7 @@ EMSCRIPTEN_BINDINGS(xptuto) {
             .property("login", &User::login)
             .property("id", &User::id)
             .property("avatar_url", &User::avatar_url)
-            .property("gravatar_id", &User::gravatar_id)
-            .property("url", &User::url)
-            .property("html_url", &User::html_url)
-            .property("type", &User::type)
-            .property("site_admin", &User::site_admin)
-            .property("name", &User::name)
-            .property("company", &User::company)
-            .property("bio", &User::bio)
-            .property("public_repos", &User::public_repos)
-            .property("public_gists", &User::public_gists)
-            .property("followers", &User::followers)
-            .property("following", &User::following)
-            .property("created_at", &User::created_at)
-            .property("updated_at", &User::updated_at);
+            .property("created_at", &User::created_at);
 
     emscripten::class_<Repo>("Repo")
             .property("id", &Repo::id)
@@ -76,7 +94,13 @@ EMSCRIPTEN_BINDINGS(xptuto) {
 
     emscripten::class_<Xptuto>("Xptuto")
         .smart_ptr<std::shared_ptr<Xptuto>>("Xptuto")
-        .class_function("make_instance", &Xptuto::make_instance)
         .function("get_users", &Xptuto::get_users)
         .function("get_repos_for_user", &Xptuto::get_repos_for_user);
+
+    emscripten::class_<GetUsersCb>("GetUsersCb")
+            .smart_ptr<std::shared_ptr<GetUsersCb>>("GetUsersCb");
+
+    emscripten::class_<JSGetUsersCb, emscripten::base<GetUsersCb>>("JSGetUsersCb")
+            .smart_ptr_constructor("JSGetUsersCb", &std::make_shared<JSGetUsersCb, emscripten::val>);
+
 }
