@@ -25,9 +25,9 @@ private:
     friend ::djinni::JniClass<NativeHttpResponse>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("org/example/xptuto/HttpResponse") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;S)V") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;I)V") };
     const jfieldID field_body { ::djinni::jniGetFieldID(clazz.get(), "body", "Ljava/lang/String;") };
-    const jfieldID field_code { ::djinni::jniGetFieldID(clazz.get(), "code", "S") };
+    const jfieldID field_code { ::djinni::jniGetFieldID(clazz.get(), "code", "I") };
 };
 
 }  // namespace djinni_generated

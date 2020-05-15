@@ -8,11 +8,11 @@ public final class HttpResponse {
 
     /*package*/ final String body;
 
-    /*package*/ final short code;
+    /*package*/ final int code;
 
     public HttpResponse(
             String body,
-            short code) {
+            int code) {
         this.body = body;
         this.code = code;
     }
@@ -21,7 +21,7 @@ public final class HttpResponse {
         return body;
     }
 
-    public short getCode() {
+    public int getCode() {
         return code;
     }
 

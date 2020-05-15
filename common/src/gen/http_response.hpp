@@ -12,10 +12,10 @@ namespace xptuto {
 
 struct HttpResponse final {
     std::optional<std::string> body;
-    int16_t code;
+    int32_t code;
 
     HttpResponse(std::optional<std::string> body_,
-                 int16_t code_)
+                 int32_t code_)
     : body(std::move(body_))
     , code(std::move(code_))
     {}

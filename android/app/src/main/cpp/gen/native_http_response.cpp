@@ -14,7 +14,7 @@ auto NativeHttpResponse::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni::
     const auto& data = ::djinni::JniClass<NativeHttpResponse>::get();
     auto r = ::djinni::LocalRef<JniType>{jniEnv->NewObject(data.clazz.get(), data.jconstructor,
                                                            ::djinni::get(::djinni::Optional<std::optional, ::djinni::String>::fromCpp(jniEnv, c.body)),
-                                                           ::djinni::get(::djinni::I16::fromCpp(jniEnv, c.code)))};
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.code)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
@@ -24,7 +24,7 @@ auto NativeHttpResponse::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeHttpResponse>::get();
     return {::djinni::Optional<std::optional, ::djinni::String>::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_body)),
-            ::djinni::I16::toCpp(jniEnv, jniEnv->GetShortField(j, data.field_code))};
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_code))};
 }
 
 }  // namespace djinni_generated
