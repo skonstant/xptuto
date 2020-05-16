@@ -6,7 +6,8 @@
 #define XPTUTO_JSON_PARSER_HPP
 
 #include "../nlohmann/json.hpp"
-#include "../gen/user.hpp"
+#include "user.hpp"
+#include "repo.hpp"
 #include "date.h"
 
 using namespace xptuto;
@@ -27,6 +28,12 @@ parse8601(std::istream &&is) {
     return tp;
 }
 
+template<class T>
+inline std::optional<T> valOrNull(const nlohmann::json &j, const std::string &key) {
+    return j.find(key) == j.end() || j[key].is_null() ? std::nullopt : std::optional<T>(
+            j[key].get<T>());
+}
+
 namespace nlohmann {
     template<>
     struct adl_serializer<User> {
@@ -37,6 +44,22 @@ namespace nlohmann {
         }
 
         static void to_json(json &j, User t) {
+            throw std::invalid_argument("user is read only");
+        }
+    };
+
+    template<>
+    struct adl_serializer<Repo> {
+        static Repo from_json(const json &j) {
+            return {j["id"].get<int32_t>(), j["name"].get<std::string>(),
+                    j["full_name"].get<std::string>(),
+                    j["owner"]["id"].get<int32_t>(),
+                    j["private"].get<bool>(),
+                    valOrNull<std::string>(j, "description"),
+                    parse8601(std::istringstream(j["created_at"].get<std::string>()))};
+        }
+
+        static void to_json(json &j, Repo t) {
             throw std::invalid_argument("user is read only");
         }
     };

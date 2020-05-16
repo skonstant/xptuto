@@ -6,6 +6,8 @@
 #include <repo.hpp>
 #include <xptuto.hpp>
 #include <get_users_cb.hpp>
+#include <get_user_cb.hpp>
+#include <get_repos_cb.hpp>
 
 #include "web_http_client.hpp"
 
@@ -64,6 +66,36 @@ public:
     }
 };
 
+class JSGetUserCb : public xptuto::GetUserCb, JSInterface {
+public:
+    explicit JSGetUserCb(emscripten::val callbacks) : JSInterface(std::move(callbacks)) {}
+
+    void on_success(const User &user) override {
+        emscripten::val on_successCB = myCallbacks["on_success"];
+        on_successCB(user);
+    }
+
+    void on_error(const std::string &error) override {
+        emscripten::val on_errorCB = myCallbacks["on_error"];
+        on_errorCB(error);
+    }
+};
+
+class JSGetReposCb : public xptuto::GetReposCb, JSInterface {
+public:
+    explicit JSGetReposCb(emscripten::val callbacks) : JSInterface(std::move(callbacks)) {}
+
+    void on_success(const std::vector<Repo> &repos, const User &user) override {
+        emscripten::val on_successCB = myCallbacks["on_success"];
+        on_successCB(repos, user);
+    }
+
+    void on_error(const std::string &error) override {
+        emscripten::val on_errorCB = myCallbacks["on_error"];
+        on_errorCB(error);
+    }
+};
+
 EMSCRIPTEN_BINDINGS(xptuto) {
     emscripten::register_vector<User>("VectorUser");
     emscripten::register_vector<Repo>("VectorRepo");
@@ -86,21 +118,31 @@ EMSCRIPTEN_BINDINGS(xptuto) {
             .property("full_name", &Repo::full_name)
             .property("owner", &Repo::owner)
             .property("priv", &Repo::priv)
-            .property("html_url", &Repo::html_url)
             .property("descr", &Repo::descr)
-            .property("created_at", &Repo::created_at)
-            .property("updated_at", &Repo::updated_at)
-            .property("pushed_at", &Repo::pushed_at);
+            .property("created_at", &Repo::created_at);
 
     emscripten::class_<Xptuto>("Xptuto")
-        .smart_ptr<std::shared_ptr<Xptuto>>("Xptuto")
-        .function("get_users", &Xptuto::get_users)
-        .function("get_repos_for_user", &Xptuto::get_repos_for_user);
+            .smart_ptr<std::shared_ptr<Xptuto>>("Xptuto")
+            .function("get_users", &Xptuto::get_users)
+            .function("get_user", &Xptuto::get_user)
+            .function("get_repos_for_user", &Xptuto::get_repos_for_user);
 
     emscripten::class_<GetUsersCb>("GetUsersCb")
             .smart_ptr<std::shared_ptr<GetUsersCb>>("GetUsersCb");
 
     emscripten::class_<JSGetUsersCb, emscripten::base<GetUsersCb>>("JSGetUsersCb")
             .smart_ptr_constructor("JSGetUsersCb", &std::make_shared<JSGetUsersCb, emscripten::val>);
+
+    emscripten::class_<GetUserCb>("GetUserCb")
+            .smart_ptr<std::shared_ptr<GetUserCb>>("GetUserCb");
+
+    emscripten::class_<JSGetUserCb, emscripten::base<GetUserCb>>("JSGetUserCb")
+            .smart_ptr_constructor("JSGetUserCb", &std::make_shared<JSGetUserCb, emscripten::val>);
+
+    emscripten::class_<GetReposCb>("GetReposCb")
+            .smart_ptr<std::shared_ptr<GetReposCb>>("GetReposCb");
+
+    emscripten::class_<JSGetReposCb, emscripten::base<GetReposCb>>("JSGetReposCb")
+            .smart_ptr_constructor("JSGetReposCb", &std::make_shared<JSGetReposCb, emscripten::val>);
 
 }

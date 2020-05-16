@@ -16,9 +16,11 @@ public:
 
 private:
 
+    void get_user(const std::string &login, const std::shared_ptr<xptuto::GetUserCb> &cb) override;
+
     void get_users(const std::shared_ptr<xptuto::GetUsersCb> &cb) override;
 
-    void get_repos_for_user(const std::shared_ptr<xptuto::GetReposCb> &cb) override;
+    void get_repos_for_user(const xptuto::User &usr, const std::shared_ptr<xptuto::GetReposCb> &cb) override;
 
 private:
     const std::shared_ptr<xptuto::HttpClient> client;

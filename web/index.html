@@ -4,21 +4,30 @@
     <meta charset="UTF-8">
     <title>XP Tutorial</title>
     <script>
-        var Module = {
-            onRuntimeInitialized: function() {
-                var x = Module.createInstance();
-                x.get_users(new Module.JSGetUsersCb({
+    var Module = {
+      onRuntimeInitialized: function() {
+        var x = Module.createInstance();
+                x.get_user("aosp", new Module.JSGetUserCb({
                     on_error: function(error) {
                         console.error(error)
                     },
-                    on_success: function(users) {
-                        for (var i = 0; i < users.size(); i++) {
-                            console.log('Got a user with name: ' + users.get(i).login);
-                        }
+                    on_success: function(user) {
+                        console.log('Got user with name: ' + user.login);
+                        x.get_repos_for_user(user, new Module.JSGetReposCb({
+                            on_error: function(error) {
+                                console.error(error)
+                            },
+                            on_success: function(repos, user) {
+                                for (var i = 0; i < repos.size(); i++) {
+                                    console.log('Got repo with name: ' + repos.get(i).name);
+                                }
+                            }
+                        }));
                     }
                 }));
-            }
-        };
+      }
+    };
+
     </script>
     <script src="xptuto-web.js"></script>
 </head>
