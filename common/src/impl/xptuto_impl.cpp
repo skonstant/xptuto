@@ -45,7 +45,7 @@ void XptutoImpl::get_user(const std::string &login, const std::shared_ptr<GetUse
                 std::make_shared<HttpCallbackImpl>([cb](const std::string_view &body, int32_t code) {
                     if (!std::empty(body)) {
                         User user = nlohmann::json::parse(body);
-                        cb->on_success({user});
+                        cb->on_success(user);
                     } else {
                         cb->on_error("error"); //TODO check HTTP code
                     }
