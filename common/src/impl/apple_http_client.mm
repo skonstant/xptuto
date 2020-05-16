@@ -13,15 +13,15 @@ using namespace djinni;
 
 void AppleHttpClient::get(const std::string &url, const std::shared_ptr<xptuto::HttpCallback> &callback) {
 
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[[NSURL alloc] initWithString:(String::fromCpp(
+    auto session = [NSURLSession sharedSession];
+    auto request = [NSMutableURLRequest requestWithURL:[[NSURL alloc] initWithString:(String::fromCpp(
             url))]];
 
     __block auto cb = callback;
 
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data,
-                                                                                          NSURLResponse *response,
-                                                                                          NSError *error) {
+    auto task = [session dataTaskWithRequest:request completionHandler:^(NSData *data,
+                                                                         NSURLResponse *response,
+                                                                         NSError *error) {
 
         std::string_view body;
 
