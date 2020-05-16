@@ -16,23 +16,36 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
+    private Xptuto x;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Xptuto x = Xptuto.makeInstance(new JavaHttpClient(getApplicationContext()));
-        x.getUsers(new GetUsersCb() {
+        x = Xptuto.makeInstance(new JavaHttpClient(getApplicationContext()));
+        x.getUser("aosp", new GetUserCb() {
             @Override
-            public void onSuccess(ArrayList<User> users) {
-                for (User u : users) {
-                    Log.d(TAG, "Got a user with name: " + u.login);
-                }
+            public void onSuccess(User user) {
+                Log.d(TAG, "Got a user with name: " + user.login);
+                x.getReposForUser(user, new GetReposCb() {
+                    @Override
+                    public void onSuccess(ArrayList<Repo> repos, User u) {
+                        for (Repo repo : repos) {
+                            Log.d(TAG, "Got a repo with name: " + repo.name);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e(TAG, "Error: " + error);
+                    }
+                });
             }
 
             @Override
             public void onError(String error) {
-                Log.d(TAG, "Error: " + error);
+                Log.e(TAG, "Error: " + error);
             }
         });
 

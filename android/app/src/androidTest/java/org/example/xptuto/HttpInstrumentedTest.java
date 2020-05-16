@@ -1,5 +1,6 @@
 package org.example.xptuto;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Test;
@@ -19,7 +20,7 @@ import static org.junit.Assert.fail;
 public class HttpInstrumentedTest {
     @Test
     public void getUser() throws InterruptedException {
-        new JavaHttpClient().get("https://api.github.com/users/aosp", new HttpCallback() {
+        new JavaHttpClient(ApplicationProvider.getApplicationContext()).get("https://api.github.com/users/aosp", new HttpCallback() {
             @Override
             public void onFailure(String reason) {
                 fail();
@@ -29,8 +30,8 @@ public class HttpInstrumentedTest {
             }
 
             @Override
-            public void onResponse(HttpResponse response) {
-                assertEquals(response.code, HttpURLConnection.HTTP_OK);
+            public void onResponse(String body, int code) {
+                assertEquals(code, HttpURLConnection.HTTP_OK);
                 synchronized (HttpInstrumentedTest.this) {
                     HttpInstrumentedTest.this.notify();
                 }
@@ -44,7 +45,7 @@ public class HttpInstrumentedTest {
 
     @Test
     public void get404() throws InterruptedException {
-        new JavaHttpClient().get("https://api.github.com/users/aospppp", new HttpCallback() {
+        new JavaHttpClient(ApplicationProvider.getApplicationContext()).get("https://api.github.com/users/aospppp", new HttpCallback() {
             @Override
             public void onFailure(String reason) {
                 fail();
@@ -54,8 +55,8 @@ public class HttpInstrumentedTest {
             }
 
             @Override
-            public void onResponse(HttpResponse response) {
-                assertEquals(response.code, HttpURLConnection.HTTP_NOT_FOUND);
+            public void onResponse(String body, int code) {
+                assertEquals(code, HttpURLConnection.HTTP_NOT_FOUND);
                 synchronized (HttpInstrumentedTest.this) {
                     HttpInstrumentedTest.this.notify();
                 }
@@ -69,7 +70,7 @@ public class HttpInstrumentedTest {
 
     @Test
     public void getError() throws InterruptedException {
-        new JavaHttpClient().get("https://api.githubbbb.com/users/aospppp", new HttpCallback() {
+        new JavaHttpClient(ApplicationProvider.getApplicationContext()).get("https://api.githubbbb.com/users/aospppp", new HttpCallback() {
             @Override
             public void onFailure(String reason) {
                 synchronized (HttpInstrumentedTest.this) {
@@ -78,7 +79,7 @@ public class HttpInstrumentedTest {
             }
 
             @Override
-            public void onResponse(HttpResponse response) {
+            public void onResponse(String body, int code) {
                 fail();
                 synchronized (HttpInstrumentedTest.this) {
                     HttpInstrumentedTest.this.notify();
