@@ -21,7 +21,7 @@ XptutoImpl::XptutoImpl(std::shared_ptr<xptuto::HttpClient> cl) : client(std::mov
 
 void XptutoImpl::get_users(const std::shared_ptr<GetUsersCb> &cb) {
     client->get("https://api.github.com/users/aosp",
-                std::make_shared<HttpCallbackImpl>([cb](const std::string_view & body, int32_t code) {
+                std::make_shared<HttpCallbackImpl>([cb](const std::string_view &body, int32_t code) {
                     if (!std::empty(body)) {
                         User user = nlohmann::json::parse(body);
                         cb->on_success({user});

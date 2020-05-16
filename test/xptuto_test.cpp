@@ -100,10 +100,10 @@ TEST_F(Xptuto, WebGetUserTest) {
     auto p = promise;
 
     webHttp->get("https://api.github.com/users/aosp", std::make_shared<HttpCallbackImpl>(
-            [p](const std::string_view & body, int32_t code) {
+            [p](const std::string_view &body, int32_t code) {
                 EXPECT_EQ(code, 200);
                 p->set_value();
-            }, [p] (const std::string &) {
+            }, [p](const std::string &) {
                 FAIL();
             }));
 

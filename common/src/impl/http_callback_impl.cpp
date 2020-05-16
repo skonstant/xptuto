@@ -6,13 +6,13 @@
 
 #include <utility>
 
-HttpCallbackImpl::HttpCallbackImpl(std::function<void(const std::string_view & body, int32_t code)> successFn,
+HttpCallbackImpl::HttpCallbackImpl(std::function<void(const std::string_view &body, int32_t code)> successFn,
                                    std::function<void(const std::string &)> failureFn) : successFn(
         std::move(successFn)),
                                                                                          failureFn(std::move(
                                                                                                  failureFn)) {}
 
-void HttpCallbackImpl::on_response(const std::string_view & body, int32_t code) {
+void HttpCallbackImpl::on_response(const std::string_view &body, int32_t code) {
     successFn(body, code);
 }
 

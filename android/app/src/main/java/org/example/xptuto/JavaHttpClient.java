@@ -21,7 +21,7 @@ public class JavaHttpClient extends HttpClient {
 
     JavaHttpClient(Context context) {
         File httpCacheDirectory = new File(context.getCacheDir(), "api_cache");
-        int cacheSize = 10*1024*1024;
+        int cacheSize = 10 * 1024 * 1024;
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
 
         client = new OkHttpClient.Builder()
