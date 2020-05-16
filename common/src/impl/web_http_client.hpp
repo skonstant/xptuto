@@ -8,7 +8,6 @@
 #define XPTUTO_WEBHTTPCLIENT_HPP
 
 #include "http_client.hpp"
-#include "http_response.hpp"
 #include "http_callback.hpp"
 
 #include <unordered_map>

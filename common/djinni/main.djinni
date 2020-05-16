@@ -36,16 +36,11 @@ xptuto = interface +c {
     get_repos_for_user(cb: get_repos_cb);
 }
 
-http_response = record {
-    body: optional<string>;
-    code: i32;
-}
-
 http_callback = interface +c {
 
     on_failure(reason: string);
-
-    on_response(response: http_response);
+    # in the generated C++ class, change this to string_view
+    on_response(body: string, code: i32);
 
 }
 

@@ -13,39 +13,33 @@ void downloadSucceeded(emscripten_fetch_t *fetch) {
     if (WebHttpClient::callbacks.find(fetch->id) != WebHttpClient::callbacks.end()) {
         auto callback = WebHttpClient::callbacks[fetch->id];
 
-        std::optional<std::string> body;
-        if (fetch->numBytes > 0) {
-            std::string str;
-            str.append(fetch->data, fetch->numBytes);
-            body = str;
+        std::string_view body;
+        if (fetch->data && fetch->numBytes > 0) {
+            body = {fetch->data, static_cast<std::string_view::size_type>(fetch->numBytes)};
         }
 
-        auto response = HttpResponse(body, fetch->status);
-        callback->on_response(response);
+        callback->on_response(body, fetch->status);
         WebHttpClient::callbacks.erase(fetch->id);
     }
-    emscripten_fetch_close(fetch); // Free data associated with the fetch.
+    emscripten_fetch_close(fetch);
 }
 
 void downloadFailed(emscripten_fetch_t *fetch) {
     if (WebHttpClient::callbacks.find(fetch->id) != WebHttpClient::callbacks.end()) {
         auto callback = WebHttpClient::callbacks[fetch->id];
         if (fetch->status) {
-            std::optional<std::string> body;
-            if (fetch->numBytes > 0) {
-                std::string str;
-                str.append(fetch->data, fetch->numBytes);
-                body = str;
+            std::string_view body;
+            if (fetch->data && fetch->numBytes > 0) {
+                body = {fetch->data, static_cast<std::string_view::size_type>(fetch->numBytes)};
             }
 
-            auto response = HttpResponse(body, fetch->status);
-            callback->on_response(response);
+            callback->on_response(body, fetch->status);
         } else {
             callback->on_failure("Download failed");
         }
         WebHttpClient::callbacks.erase(fetch->id);
     }
-    emscripten_fetch_close(fetch); // Also free data on failure.
+    emscripten_fetch_close(fetch);
 }
 
 void WebHttpClient::get(const std::string &url, const std::shared_ptr<HttpCallback> &callback) {

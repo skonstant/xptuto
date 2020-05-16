@@ -11,15 +11,15 @@
 class HttpCallbackImpl : public xptuto::HttpCallback {
 
 public:
-    HttpCallbackImpl(std::function<void(const xptuto::HttpResponse &)> successFn,
+    HttpCallbackImpl(std::function<void(const std::string_view & body, int32_t code)> successFn,
                      std::function<void(const std::string &)> failureFn);
 
-    void on_response(const xptuto::HttpResponse &response) override;
+    void on_response(const std::string_view & body, int32_t code) override;
 
     void on_failure(const std::string &reason) override;
 
 private:
-    const std::function<void(const xptuto::HttpResponse &response)> successFn;
+    const std::function<void(const std::string_view & body, int32_t code)> successFn;
     const std::function<void(const std::string &reason)> failureFn;
 
 };

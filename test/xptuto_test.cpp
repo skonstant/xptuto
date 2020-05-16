@@ -7,7 +7,6 @@
 #include <user.hpp>
 #include "stubs/http_client_stub.hpp"
 #include <get_users_cb_impl.hpp>
-#include "http_response.hpp"
 
 #include <future>
 
@@ -101,8 +100,8 @@ TEST_F(Xptuto, WebGetUserTest) {
     auto p = promise;
 
     webHttp->get("https://api.github.com/users/aosp", std::make_shared<HttpCallbackImpl>(
-            [p](const xptuto::HttpResponse &response) {
-                EXPECT_EQ(response.code, 200);
+            [p](const std::string_view & body, int32_t code) {
+                EXPECT_EQ(code, 200);
                 p->set_value();
             }, [p] (const std::string &) {
                 FAIL();
@@ -119,13 +118,13 @@ TEST_F(Xptuto, WebGetUserTest) {
 #include "http_callback_impl.hpp"
 
 TEST_F(Xptuto, AppleGetUserTest) {
-    auto webHttp = std::make_shared<AppleHttpClient>();
+    auto appleHttp = std::make_shared<AppleHttpClient>();
 
     auto p = promise;
 
-    webHttp->get("https://api.github.com/users/aosp", std::make_shared<HttpCallbackImpl>(
-            [p](const xptuto::HttpResponse &response) {
-                EXPECT_EQ(response.code, 200);
+    appleHttp->get("https://api.github.com/users/aosp", std::make_shared<HttpCallbackImpl>(
+            [p](const std::string_view & body, int32_t code) {
+                EXPECT_EQ(code, 200);
                 p->set_value();
             }, [p](const std::string &) {
                 FAIL();

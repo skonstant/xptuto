@@ -6,14 +6,14 @@
 
 #include <utility>
 
-HttpCallbackImpl::HttpCallbackImpl(std::function<void(const xptuto::HttpResponse &)> successFn,
+HttpCallbackImpl::HttpCallbackImpl(std::function<void(const std::string_view & body, int32_t code)> successFn,
                                    std::function<void(const std::string &)> failureFn) : successFn(
         std::move(successFn)),
                                                                                          failureFn(std::move(
                                                                                                  failureFn)) {}
 
-void HttpCallbackImpl::on_response(const xptuto::HttpResponse &response) {
-    successFn(response);
+void HttpCallbackImpl::on_response(const std::string_view & body, int32_t code) {
+    successFn(body, code);
 }
 
 void HttpCallbackImpl::on_failure(const std::string &reason) {

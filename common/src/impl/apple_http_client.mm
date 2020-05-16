@@ -8,7 +8,6 @@
 #import <Foundation/Foundation.h>
 #import "DJIMarshal+Private.h"
 #import "apple_http_client.hpp"
-#include "http_response.hpp"
 
 using namespace djinni;
 
@@ -24,18 +23,17 @@ void AppleHttpClient::get(const std::string &url, const std::shared_ptr<xptuto::
                                                                                           NSURLResponse *response,
                                                                                           NSError *error) {
 
-        std::optional<std::string> body;
+        std::string_view body;
 
         if (data && data.length) {
-            body = std::make_optional<std::string>((char *) [data bytes], data.length);
+            body = {(char *) [data bytes], data.length};
         }
 
         if (error) {
             cb->on_failure(String::toCpp(error.localizedDescription));
         } else {
             auto httpResponse = (NSHTTPURLResponse *) response;
-            cb->on_response(xptuto::HttpResponse(body,
-                                                 static_cast<int32_t>(httpResponse.statusCode)));
+            cb->on_response(body, static_cast<int32_t>(httpResponse.statusCode));
         }
     }];
 

@@ -8,7 +8,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class HttpCallback {
     public abstract void onFailure(String reason);
 
-    public abstract void onResponse(HttpResponse response);
+    /** in the generated C++ class, change this to string_view */
+    public abstract void onResponse(String body, int code);
 
     private static final class CppProxy extends HttpCallback
     {
@@ -42,11 +43,11 @@ public abstract class HttpCallback {
         private native void native_onFailure(long _nativeRef, String reason);
 
         @Override
-        public void onResponse(HttpResponse response)
+        public void onResponse(String body, int code)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_onResponse(this.nativeRef, response);
+            native_onResponse(this.nativeRef, body, code);
         }
-        private native void native_onResponse(long _nativeRef, HttpResponse response);
+        private native void native_onResponse(long _nativeRef, String body, int code);
     }
 }

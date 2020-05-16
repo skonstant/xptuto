@@ -3,7 +3,6 @@
 
 #include "native_http_callback.hpp"  // my header
 #include "Marshal.hpp"
-#include "native_http_response.hpp"
 
 namespace djinni_generated {
 
@@ -29,12 +28,13 @@ CJNIEXPORT void JNICALL Java_org_example_xptuto_HttpCallback_00024CppProxy_nativ
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_org_example_xptuto_HttpCallback_00024CppProxy_native_1onResponse(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_response)
+CJNIEXPORT void JNICALL Java_org_example_xptuto_HttpCallback_00024CppProxy_native_1onResponse(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jstring j_body, jint j_code)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
         const auto& ref = ::djinni::objectFromHandleAddress<::xptuto::HttpCallback>(nativeRef);
-        ref->on_response(::djinni_generated::NativeHttpResponse::toCpp(jniEnv, j_response));
+        ref->on_response(::djinni::String::toCpp(jniEnv, j_body),
+                         ::djinni::I32::toCpp(jniEnv, j_code));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 

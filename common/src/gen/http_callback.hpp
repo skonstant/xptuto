@@ -3,11 +3,10 @@
 
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 namespace xptuto {
-
-struct HttpResponse;
 
 class HttpCallback {
 public:
@@ -15,7 +14,8 @@ public:
 
     virtual void on_failure(const std::string & reason) = 0;
 
-    virtual void on_response(const HttpResponse & response) = 0;
+    /** in the generated C++ class, change this to string_view */
+    virtual void on_response(const std::string_view & body, int32_t code) = 0;
 };
 
 }  // namespace xptuto
