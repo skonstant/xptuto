@@ -4,12 +4,15 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 namespace xptuto {
 
 class GetReposCb;
+class GetUserCb;
 class GetUsersCb;
 class HttpClient;
+struct User;
 
 class Xptuto {
 public:
@@ -17,9 +20,11 @@ public:
 
     static std::shared_ptr<Xptuto> make_instance(const std::shared_ptr<HttpClient> & client);
 
+    virtual void get_user(const std::string & login, const std::shared_ptr<GetUserCb> & cb) = 0;
+
     virtual void get_users(const std::shared_ptr<GetUsersCb> & cb) = 0;
 
-    virtual void get_repos_for_user(const std::shared_ptr<GetReposCb> & cb) = 0;
+    virtual void get_repos_for_user(const User & usr, const std::shared_ptr<GetReposCb> & cb) = 0;
 };
 
 }  // namespace xptuto

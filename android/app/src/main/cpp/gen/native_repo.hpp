@@ -25,17 +25,14 @@ private:
     friend ::djinni::JniClass<NativeRepo>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("org/example/xptuto/Repo") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(ILjava/lang/String;Ljava/lang/String;Lorg/example/xptuto/User;ZLjava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/util/Date;Ljava/util/Date;)V") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(ILjava/lang/String;Ljava/lang/String;IZLjava/lang/String;Ljava/util/Date;)V") };
     const jfieldID field_id { ::djinni::jniGetFieldID(clazz.get(), "id", "I") };
     const jfieldID field_name { ::djinni::jniGetFieldID(clazz.get(), "name", "Ljava/lang/String;") };
     const jfieldID field_fullName { ::djinni::jniGetFieldID(clazz.get(), "fullName", "Ljava/lang/String;") };
-    const jfieldID field_owner { ::djinni::jniGetFieldID(clazz.get(), "owner", "Lorg/example/xptuto/User;") };
+    const jfieldID field_owner { ::djinni::jniGetFieldID(clazz.get(), "owner", "I") };
     const jfieldID field_priv { ::djinni::jniGetFieldID(clazz.get(), "priv", "Z") };
-    const jfieldID field_htmlUrl { ::djinni::jniGetFieldID(clazz.get(), "htmlUrl", "Ljava/lang/String;") };
     const jfieldID field_descr { ::djinni::jniGetFieldID(clazz.get(), "descr", "Ljava/lang/String;") };
     const jfieldID field_createdAt { ::djinni::jniGetFieldID(clazz.get(), "createdAt", "Ljava/util/Date;") };
-    const jfieldID field_updatedAt { ::djinni::jniGetFieldID(clazz.get(), "updatedAt", "Ljava/util/Date;") };
-    const jfieldID field_pushedAt { ::djinni::jniGetFieldID(clazz.get(), "pushedAt", "Ljava/util/Date;") };
 };
 
 }  // namespace djinni_generated

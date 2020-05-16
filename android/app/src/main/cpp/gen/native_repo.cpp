@@ -3,7 +3,6 @@
 
 #include "native_repo.hpp"  // my header
 #include "Marshal.hpp"
-#include "native_user.hpp"
 
 namespace djinni_generated {
 
@@ -17,31 +16,25 @@ auto NativeRepo::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni::LocalRef
                                                            ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.id)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.name)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.full_name)),
-                                                           ::djinni::get(::djinni_generated::NativeUser::fromCpp(jniEnv, c.owner)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.owner)),
                                                            ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.priv)),
-                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.html_url)),
-                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.descr)),
-                                                           ::djinni::get(::djinni::Date::fromCpp(jniEnv, c.created_at)),
-                                                           ::djinni::get(::djinni::Date::fromCpp(jniEnv, c.updated_at)),
-                                                           ::djinni::get(::djinni::Date::fromCpp(jniEnv, c.pushed_at)))};
+                                                           ::djinni::get(::djinni::Optional<std::optional, ::djinni::String>::fromCpp(jniEnv, c.descr)),
+                                                           ::djinni::get(::djinni::Date::fromCpp(jniEnv, c.created_at)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
 
 auto NativeRepo::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 11);
+    ::djinni::JniLocalScope jscope(jniEnv, 8);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeRepo>::get();
     return {::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_id)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_name)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_fullName)),
-            ::djinni_generated::NativeUser::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_owner)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_owner)),
             ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_priv)),
-            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_htmlUrl)),
-            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_descr)),
-            ::djinni::Date::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_createdAt)),
-            ::djinni::Date::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_updatedAt)),
-            ::djinni::Date::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_pushedAt))};
+            ::djinni::Optional<std::optional, ::djinni::String>::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_descr)),
+            ::djinni::Date::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_createdAt))};
 }
 
 }  // namespace djinni_generated

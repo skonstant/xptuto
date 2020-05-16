@@ -9,13 +9,15 @@ repo = record {
     id: i32;
     name: string;
     full_name: string;
-    owner: user;
+    owner: i32;
     priv: bool;
-    html_url: string;
-    descr: string;
+    descr: optional<string>;
     created_at: date;
-    updated_at: date;
-    pushed_at: date;
+}
+
+get_user_cb = interface +j +c {
+    on_success(user : user);
+    on_error(error: string);
 }
 
 get_users_cb = interface +j +c {
@@ -31,9 +33,11 @@ get_repos_cb = interface +j +c {
 xptuto = interface +c {
     static make_instance(client: http_client) : xptuto;
 
+    get_user(login: string, cb : get_user_cb);
+
     get_users(cb : get_users_cb);
 
-    get_repos_for_user(cb: get_repos_cb);
+    get_repos_for_user(usr: user, cb: get_repos_cb);
 }
 
 http_callback = interface +c {

@@ -14,41 +14,29 @@ public final class Repo {
 
     /*package*/ final String fullName;
 
-    /*package*/ final User owner;
+    /*package*/ final int owner;
 
     /*package*/ final boolean priv;
-
-    /*package*/ final String htmlUrl;
 
     /*package*/ final String descr;
 
     /*package*/ final Date createdAt;
 
-    /*package*/ final Date updatedAt;
-
-    /*package*/ final Date pushedAt;
-
     public Repo(
             int id,
             String name,
             String fullName,
-            User owner,
+            int owner,
             boolean priv,
-            String htmlUrl,
             String descr,
-            Date createdAt,
-            Date updatedAt,
-            Date pushedAt) {
+            Date createdAt) {
         this.id = id;
         this.name = name;
         this.fullName = fullName;
         this.owner = owner;
         this.priv = priv;
-        this.htmlUrl = htmlUrl;
         this.descr = descr;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.pushedAt = pushedAt;
     }
 
     public int getId() {
@@ -63,16 +51,12 @@ public final class Repo {
         return fullName;
     }
 
-    public User getOwner() {
+    public int getOwner() {
         return owner;
     }
 
     public boolean getPriv() {
         return priv;
-    }
-
-    public String getHtmlUrl() {
-        return htmlUrl;
     }
 
     public String getDescr() {
@@ -83,14 +67,6 @@ public final class Repo {
         return createdAt;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public Date getPushedAt() {
-        return pushedAt;
-    }
-
     @Override
     public String toString() {
         return "Repo{" +
@@ -99,11 +75,8 @@ public final class Repo {
                 "," + "fullName=" + fullName +
                 "," + "owner=" + owner +
                 "," + "priv=" + priv +
-                "," + "htmlUrl=" + htmlUrl +
                 "," + "descr=" + descr +
                 "," + "createdAt=" + createdAt +
-                "," + "updatedAt=" + updatedAt +
-                "," + "pushedAt=" + pushedAt +
         "}";
     }
 

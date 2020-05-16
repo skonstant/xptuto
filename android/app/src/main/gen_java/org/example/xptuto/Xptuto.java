@@ -6,9 +6,11 @@ package org.example.xptuto;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Xptuto {
+    public abstract void getUser(String login, GetUserCb cb);
+
     public abstract void getUsers(GetUsersCb cb);
 
-    public abstract void getReposForUser(GetReposCb cb);
+    public abstract void getReposForUser(User usr, GetReposCb cb);
 
     public static Xptuto makeInstance(HttpClient client)
     {
@@ -39,6 +41,14 @@ public abstract class Xptuto {
         }
 
         @Override
+        public void getUser(String login, GetUserCb cb)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_getUser(this.nativeRef, login, cb);
+        }
+        private native void native_getUser(long _nativeRef, String login, GetUserCb cb);
+
+        @Override
         public void getUsers(GetUsersCb cb)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
@@ -47,12 +57,12 @@ public abstract class Xptuto {
         private native void native_getUsers(long _nativeRef, GetUsersCb cb);
 
         @Override
-        public void getReposForUser(GetReposCb cb)
+        public void getReposForUser(User usr, GetReposCb cb)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_getReposForUser(this.nativeRef, cb);
+            native_getReposForUser(this.nativeRef, usr, cb);
         }
-        private native void native_getReposForUser(long _nativeRef, GetReposCb cb);
+        private native void native_getReposForUser(long _nativeRef, User usr, GetReposCb cb);
 
         public static native Xptuto makeInstance(HttpClient client);
     }
