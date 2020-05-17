@@ -53,5 +53,9 @@ void WebHttpClient::get(const std::string &url, const std::shared_ptr<HttpCallba
     callbacks.insert({fetch->id, callback});
 }
 
+HttpResponse WebHttpClient::get_sync(const std::string &url) {
+    return xptuto::HttpResponse();
+}
+
 
 #endif

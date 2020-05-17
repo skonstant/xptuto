@@ -12,7 +12,7 @@
 class XptutoImpl : public xptuto::Xptuto, public std::enable_shared_from_this<XptutoImpl> {
 
 public:
-    explicit XptutoImpl(std::shared_ptr<xptuto::HttpClient> client);
+    explicit XptutoImpl(std::shared_ptr<xptuto::HttpClient> client, std::shared_ptr<xptuto::PlatformThreads>  threads);
 
 private:
 
@@ -24,7 +24,7 @@ private:
 
 private:
     const std::shared_ptr<xptuto::HttpClient> client;
-
+    const std::shared_ptr<xptuto::PlatformThreads> threads;
 };
 
 

@@ -30,8 +30,20 @@ get_repos_cb = interface +j +c {
     on_error(error: string);
 }
 
+platform_threads = interface +j +c {
+    create_thread(name: string, func: thread_func);
+
+    run_on_main_thread(func: thread_func);
+
+    is_main_thread(): bool;
+}
+
+thread_func = interface +c {
+    run();
+}
+
 xptuto = interface +c {
-    static make_instance(client: http_client) : xptuto;
+    static make_instance(client: http_client, threads: platform_threads) : xptuto;
 
     get_user(login: string, cb : get_user_cb);
 
@@ -48,6 +60,13 @@ http_callback = interface +c {
 
 }
 
+http_response = record {
+    code: optional<i32>;
+    body: optional<string>;
+}
+
 http_client = interface +j +c {
     get(url: string, callback: http_callback);
+
+    get_sync(url: string): http_response;
 }

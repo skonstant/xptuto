@@ -7,6 +7,7 @@
 #include "native_get_user_cb.hpp"
 #include "native_get_users_cb.hpp"
 #include "native_http_client.hpp"
+#include "native_platform_threads.hpp"
 #include "native_user.hpp"
 
 namespace djinni_generated {
@@ -24,11 +25,12 @@ CJNIEXPORT void JNICALL Java_org_example_xptuto_Xptuto_00024CppProxy_nativeDestr
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jobject JNICALL Java_org_example_xptuto_Xptuto_00024CppProxy_makeInstance(JNIEnv* jniEnv, jobject /*this*/, jobject j_client)
+CJNIEXPORT jobject JNICALL Java_org_example_xptuto_Xptuto_00024CppProxy_makeInstance(JNIEnv* jniEnv, jobject /*this*/, jobject j_client, jobject j_threads)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::xptuto::Xptuto::make_instance(::djinni_generated::NativeHttpClient::toCpp(jniEnv, j_client));
+        auto r = ::xptuto::Xptuto::make_instance(::djinni_generated::NativeHttpClient::toCpp(jniEnv, j_client),
+                                                 ::djinni_generated::NativePlatformThreads::toCpp(jniEnv, j_threads));
         return ::djinni::release(::djinni_generated::NativeXptuto::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }

@@ -9,12 +9,15 @@
 namespace xptuto {
 
 class HttpCallback;
+struct HttpResponse;
 
 class HttpClient {
 public:
     virtual ~HttpClient() {}
 
     virtual void get(const std::string & url, const std::shared_ptr<HttpCallback> & callback) = 0;
+
+    virtual HttpResponse get_sync(const std::string & url) = 0;
 };
 
 }  // namespace xptuto

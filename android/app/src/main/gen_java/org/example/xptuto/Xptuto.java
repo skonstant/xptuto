@@ -12,9 +12,10 @@ public abstract class Xptuto {
 
     public abstract void getReposForUser(User usr, GetReposCb cb);
 
-    public static Xptuto makeInstance(HttpClient client)
+    public static Xptuto makeInstance(HttpClient client, PlatformThreads threads)
     {
-        return CppProxy.makeInstance(client);
+        return CppProxy.makeInstance(client,
+                                     threads);
     }
 
     private static final class CppProxy extends Xptuto
@@ -64,6 +65,6 @@ public abstract class Xptuto {
         }
         private native void native_getReposForUser(long _nativeRef, User usr, GetReposCb cb);
 
-        public static native Xptuto makeInstance(HttpClient client);
+        public static native Xptuto makeInstance(HttpClient client, PlatformThreads threads);
     }
 }

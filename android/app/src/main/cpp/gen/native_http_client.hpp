@@ -34,6 +34,7 @@ private:
         ~JavaProxy();
 
         void get(const std::string & url, const std::shared_ptr<::xptuto::HttpCallback> & callback) override;
+        ::xptuto::HttpResponse get_sync(const std::string & url) override;
 
     private:
         friend ::djinni::JniInterface<::xptuto::HttpClient, ::djinni_generated::NativeHttpClient>;
@@ -41,6 +42,7 @@ private:
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("org/example/xptuto/HttpClient") };
     const jmethodID method_get { ::djinni::jniGetMethodID(clazz.get(), "get", "(Ljava/lang/String;Lorg/example/xptuto/HttpCallback;)V") };
+    const jmethodID method_getSync { ::djinni::jniGetMethodID(clazz.get(), "getSync", "(Ljava/lang/String;)Lorg/example/xptuto/HttpResponse;") };
 };
 
 }  // namespace djinni_generated

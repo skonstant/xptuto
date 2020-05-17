@@ -15,11 +15,12 @@
 using namespace xptuto;
 using namespace std::chrono_literals;
 
-std::shared_ptr<Xptuto> xptuto::Xptuto::make_instance(const std::shared_ptr<HttpClient> &client) {
-    return std::make_shared<XptutoImpl>(client);
+std::shared_ptr<Xptuto> xptuto::Xptuto::make_instance(const std::shared_ptr<HttpClient> &client,
+        const std::shared_ptr<PlatformThreads> & threads) {
+    return std::make_shared<XptutoImpl>(client, threads);
 }
 
-XptutoImpl::XptutoImpl(std::shared_ptr<xptuto::HttpClient> cl) : client(std::move(cl)) {}
+XptutoImpl::XptutoImpl(std::shared_ptr<xptuto::HttpClient> cl, std::shared_ptr<PlatformThreads>  threads) : client(std::move(cl)), threads(std::move(threads)) {}
 
 void XptutoImpl::get_users(const std::shared_ptr<GetUsersCb> &cb) {
     // no local users fror now

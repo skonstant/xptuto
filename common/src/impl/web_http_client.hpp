@@ -17,6 +17,8 @@ class WebHttpClient : public xptuto::HttpClient {
 public:
     void get(const std::string &url, const std::shared_ptr<xptuto::HttpCallback> &callback) override;
 
+    xptuto::HttpResponse get_sync(const std::string &url) override;
+
     static inline std::unordered_map<unsigned int, std::shared_ptr<xptuto::HttpCallback>> callbacks = {};
 };
 

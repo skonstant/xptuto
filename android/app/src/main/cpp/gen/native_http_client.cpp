@@ -4,6 +4,7 @@
 #include "native_http_client.hpp"  // my header
 #include "Marshal.hpp"
 #include "native_http_callback.hpp"
+#include "native_http_response.hpp"
 
 namespace djinni_generated {
 
@@ -24,6 +25,15 @@ void NativeHttpClient::JavaProxy::get(const std::string & c_url, const std::shar
                            ::djinni::get(::djinni_generated::NativeHttpCallback::fromCpp(jniEnv, c_callback)));
     ::djinni::jniExceptionCheck(jniEnv);
 }
+::xptuto::HttpResponse NativeHttpClient::JavaProxy::get_sync(const std::string & c_url) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeHttpClient>::get();
+    auto jret = jniEnv->CallObjectMethod(Handle::get().get(), data.method_getSync,
+                                         ::djinni::get(::djinni::String::fromCpp(jniEnv, c_url)));
+    ::djinni::jniExceptionCheck(jniEnv);
+    return ::djinni_generated::NativeHttpResponse::toCpp(jniEnv, jret);
+}
 
 CJNIEXPORT void JNICALL Java_org_example_xptuto_HttpClient_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
@@ -41,6 +51,16 @@ CJNIEXPORT void JNICALL Java_org_example_xptuto_HttpClient_00024CppProxy_native_
         ref->get(::djinni::String::toCpp(jniEnv, j_url),
                  ::djinni_generated::NativeHttpCallback::toCpp(jniEnv, j_callback));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT jobject JNICALL Java_org_example_xptuto_HttpClient_00024CppProxy_native_1getSync(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jstring j_url)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::xptuto::HttpClient>(nativeRef);
+        auto r = ref->get_sync(::djinni::String::toCpp(jniEnv, j_url));
+        return ::djinni::release(::djinni_generated::NativeHttpResponse::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
 }  // namespace djinni_generated

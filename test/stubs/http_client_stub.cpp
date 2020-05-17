@@ -23,3 +23,10 @@ void HttpClientStub::get(const std::string &url, const std::shared_ptr<HttpCallb
     }, callback);
     t.detach();
 }
+
+HttpResponse HttpClientStub::get_sync(const std::string &url) {
+    auto p = path.value();
+    auto stream = std::ifstream(std::string(TEST_PATH) + p);
+    auto response = std::string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+    return {200, response};
+}

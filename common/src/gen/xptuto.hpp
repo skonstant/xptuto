@@ -12,13 +12,14 @@ class GetReposCb;
 class GetUserCb;
 class GetUsersCb;
 class HttpClient;
+class PlatformThreads;
 struct User;
 
 class Xptuto {
 public:
     virtual ~Xptuto() {}
 
-    static std::shared_ptr<Xptuto> make_instance(const std::shared_ptr<HttpClient> & client);
+    static std::shared_ptr<Xptuto> make_instance(const std::shared_ptr<HttpClient> & client, const std::shared_ptr<PlatformThreads> & threads);
 
     virtual void get_user(const std::string & login, const std::shared_ptr<GetUserCb> & cb) = 0;
 

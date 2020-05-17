@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class HttpClient {
     public abstract void get(String url, HttpCallback callback);
 
+    public abstract HttpResponse getSync(String url);
+
     private static final class CppProxy extends HttpClient
     {
         private final long nativeRef;
@@ -38,5 +40,13 @@ public abstract class HttpClient {
             native_get(this.nativeRef, url, callback);
         }
         private native void native_get(long _nativeRef, String url, HttpCallback callback);
+
+        @Override
+        public HttpResponse getSync(String url)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getSync(this.nativeRef, url);
+        }
+        private native HttpResponse native_getSync(long _nativeRef, String url);
     }
 }
