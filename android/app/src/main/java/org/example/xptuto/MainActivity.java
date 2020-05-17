@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        x = Xptuto.makeInstance(new JavaHttpClient(getApplicationContext()));
+        x = Xptuto.makeInstance(new JavaHttpClient(getApplicationContext()), new AndroidThreads());
         x.getUser("aosp", new GetUserCb() {
             @Override
             public void onSuccess(User user) {

@@ -11,6 +11,8 @@
 #include <get_users_cb_impl.hpp>
 #include <get_user_cb_impl.hpp>
 #include <get_repos_cb_impl.hpp>
+#include "thread_func_impl.hpp"
+#include "web_threads.hpp"
 
 #include <future>
 
@@ -83,6 +85,36 @@ TEST_F(Xptuto, GetReposTest) {
             }
     ));
 
+    if (future.wait_for(2s) != std::future_status::ready) {
+        FAIL();
+    }
+}
+
+TEST_F(Xptuto, BackgroundThreadTest) {
+    auto p = promise;
+
+    auto id = std::this_thread::get_id();
+
+    stubThreads->create_thread("test", std::make_shared<ThreadFuncImpl>([p, id](){
+        EXPECT_NE(id, std::this_thread::get_id());
+        p->set_value();
+    }));
+
+    if (future.wait_for(1s) != std::future_status::ready) {
+        FAIL();
+    }
+}
+
+TEST_F(Xptuto, MainThreadTest) {
+    auto p = promise;
+
+    auto id = std::this_thread::get_id();
+
+    stubThreads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([p, id](){
+        EXPECT_EQ(id, std::this_thread::get_id());
+        p->set_value();
+    }));
+
     if (future.wait_for(1s) != std::future_status::ready) {
         FAIL();
     }
@@ -106,10 +138,53 @@ TEST_F(Xptuto, WebGetUserTest) {
                 FAIL();
             }));
 
-    if (future.wait_for(10s) != std::future_status::ready) {
+    if (future.wait_for(1s) != std::future_status::ready) {
         FAIL();
     }
 }
+
+TEST_F(Xptuto, WebGetUserSyncTest) {
+    auto webHttp = std::make_shared<WebHttpClient>();
+    auto response = webHttp->get_sync("https://api.github.com/users/aosp");
+    EXPECT_EQ(response.code.value(), 200);
+}
+
+TEST_F(Xptuto, WebGet404SyncTest) {
+    auto webHttp = std::make_shared<WebHttpClient>();
+    auto response = webHttp->get_sync("https://api.github.com/users/aospppp");
+    EXPECT_EQ(response.code.value(), 404);
+}
+
+TEST_F(Xptuto, WebBackgroundThreadTest) {
+    auto webThreads = std::make_shared<WebThreads>();
+    auto p = promise;
+
+    auto id = std::this_thread::get_id();
+
+    webThreads->create_thread("test", std::make_shared<ThreadFuncImpl>([p, id](){
+        EXPECT_NE(id, std::this_thread::get_id());
+        p->set_value();
+    }));
+
+    if (future.wait_for(1s) != std::future_status::ready) {
+        FAIL();
+    }
+}
+
+TEST_F(Xptuto, WebMainThreadTest) {
+    auto webThreads = std::make_shared<WebThreads>();
+    auto p = promise;
+
+    webThreads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([p, webThreads](){
+        EXPECT_TRUE(webThreads->is_main_thread());
+        p->set_value();
+    }));
+
+    if (future.wait_for(1s) != std::future_status::ready) {
+        FAIL();
+    }
+}
+
 
 #elif __APPLE__
 

@@ -54,4 +54,25 @@ public class JavaHttpClient extends HttpClient {
             }
         });
     }
+
+    @Override
+    public HttpResponse getSync(String url) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            ResponseBody b = response.body();
+            String body = null;
+            if (b != null) {
+                try {
+                    body = b.string();
+                } catch (IOException unused) {
+                }
+            }
+            return new HttpResponse(response.code(), body);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -91,4 +91,29 @@ public class HttpInstrumentedTest {
             this.wait();
         }
     }
+
+    @Test
+    public void getUserSync() {
+        HttpResponse response = new JavaHttpClient(ApplicationProvider.getApplicationContext())
+                .getSync("https://api.github.com/users/aosp");
+        assertEquals(response.code.intValue(), 200);
+    }
+
+    @Test
+    public void get404Sync() {
+        HttpResponse response = new JavaHttpClient(ApplicationProvider.getApplicationContext())
+                .getSync("https://api.github.com/users/aosppppp");
+        assertEquals(response.code.intValue(), 404);
+    }
+
+    @Test
+    public void getErrorSync() {
+        try {
+            new JavaHttpClient(ApplicationProvider.getApplicationContext())
+                    .getSync("https://api.githubbbbb.com/users/aosppppp");
+            fail();
+        } catch (Exception e) {
+
+        }
+    }
 }
