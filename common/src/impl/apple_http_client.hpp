@@ -18,6 +18,8 @@ class AppleHttpClient : public xptuto::HttpClient {
 
 public:
     void get(const std::string &url, const std::shared_ptr<xptuto::HttpCallback> &callback) override;
+
+    xptuto::HttpResponse get_sync(const std::string &url) override;
 };
 
 #endif

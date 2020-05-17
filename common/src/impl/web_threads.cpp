@@ -37,13 +37,6 @@ WebThreads::WebThreads() {
     emscripten_request_animation_frame_loop(get_main_thread, nullptr);
 }
 
-void WebThreads::create_thread(const std::string &name, const std::shared_ptr<ThreadFunc> &func) {
-    std::thread t([](const std::shared_ptr<ThreadFunc> &f) {
-        f->run();
-    }, func);
-    t.detach();
-}
-
 void WebThreads::run_on_main_thread(const std::shared_ptr<ThreadFunc> &func) {
     functionsToRun.push(func);
     emscripten_request_animation_frame_loop(one_iter, nullptr);

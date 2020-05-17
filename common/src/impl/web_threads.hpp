@@ -6,18 +6,16 @@
 #ifndef XPTUTO_WEBTHREADS_HPP
 #define XPTUTO_WEBTHREADS_HPP
 
-#include "platform_threads.hpp"
+#include "base_threads.hpp"
 #include "thread_func.hpp"
 #include <queue>
 #include <thread>
 #include <optional>
 
-class WebThreads : public xptuto::PlatformThreads {
+class WebThreads : public BaseThreads {
 public:
 
     WebThreads();
-
-    void create_thread(const std::string &name, const std::shared_ptr<xptuto::ThreadFunc> &func) override;
 
     void run_on_main_thread(const std::shared_ptr<xptuto::ThreadFunc> &func) override;
 

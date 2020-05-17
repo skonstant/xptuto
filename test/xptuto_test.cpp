@@ -190,6 +190,7 @@ TEST_F(Xptuto, WebMainThreadTest) {
 
 #include "apple_http_client.hpp"
 #include "http_callback_impl.hpp"
+#include "apple_threads.hpp"
 
 TEST_F(Xptuto, AppleGetUserTest) {
     auto appleHttp = std::make_shared<AppleHttpClient>();
@@ -205,6 +206,48 @@ TEST_F(Xptuto, AppleGetUserTest) {
             }));
 
     if (future.wait_for(10s) != std::future_status::ready) {
+        FAIL();
+    }
+}
+
+TEST_F(Xptuto, AppleGetUserSyncTest) {
+    auto webHttp = std::make_shared<AppleHttpClient>();
+    auto response = webHttp->get_sync("https://api.github.com/users/aosp");
+    EXPECT_EQ(response.code.value(), 200);
+}
+
+TEST_F(Xptuto, AppleGet404SyncTest) {
+    auto webHttp = std::make_shared<AppleHttpClient>();
+    auto response = webHttp->get_sync("https://api.github.com/users/aospppp");
+    EXPECT_EQ(response.code.value(), 404);
+}
+
+TEST_F(Xptuto, AppleBackgroundThreadTest) {
+    auto appleThreads = std::make_shared<AppleThreads>();
+    auto p = promise;
+
+    auto id = std::this_thread::get_id();
+
+    appleThreads->create_thread("test", std::make_shared<ThreadFuncImpl>([p, id](){
+        EXPECT_NE(id, std::this_thread::get_id());
+        p->set_value();
+    }));
+
+    if (future.wait_for(1s) != std::future_status::ready) {
+        FAIL();
+    }
+}
+
+TEST_F(Xptuto, AppleMainThreadTest) {
+    auto appleThreads = std::make_shared<AppleThreads>();
+    auto p = promise;
+
+    appleThreads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([p, appleThreads](){
+        EXPECT_TRUE(appleThreads->is_main_thread());
+        p->set_value();
+    }));
+
+    if (future.wait_for(1s) != std::future_status::ready) {
         FAIL();
     }
 }
