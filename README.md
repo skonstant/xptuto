@@ -12,7 +12,7 @@ https://medium.com/@stephane_21545/cross-platform-mobile-and-web-development-wit
 
 ## Part 1: Setup
 
-https://medium.com/swlh/cross-platform-mobile-and-web-development-with-c-explained-8d2ab1224c0a?source
+https://medium.com/swlh/cross-platform-mobile-and-web-development-with-c-explained-8d2ab1224c0a
 
 ## Part 2: Pass objects around
 
