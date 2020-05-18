@@ -12,7 +12,6 @@
 #include <get_user_cb_impl.hpp>
 #include <get_repos_cb_impl.hpp>
 #include "thread_func_impl.hpp"
-#include "web_threads.hpp"
 #include "xptuto_impl.hpp"
 
 #include <future>
@@ -117,7 +116,7 @@ TEST_F(Xptuto, BackgroundThreadTest) {
 
     auto id = std::this_thread::get_id();
 
-    stubThreads->create_thread("test", std::make_shared<ThreadFuncImpl>([p, id](){
+    stubThreads->create_thread("test", std::make_shared<ThreadFuncImpl>([p, id]() {
         EXPECT_NE(id, std::this_thread::get_id());
         p->set_value();
     }));
@@ -132,7 +131,7 @@ TEST_F(Xptuto, MainThreadTest) {
 
     auto id = std::this_thread::get_id();
 
-    stubThreads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([p, id](){
+    stubThreads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([p, id]() {
         EXPECT_EQ(id, std::this_thread::get_id());
         p->set_value();
     }));
@@ -141,187 +140,3 @@ TEST_F(Xptuto, MainThreadTest) {
         FAIL();
     }
 }
-
-#ifdef EMSCRIPTEN
-
-#include "web_http_client.hpp"
-#include "http_callback_impl.hpp"
-
-TEST_F(Xptuto, WebGetUserTest) {
-    auto webHttp = std::make_shared<WebHttpClient>();
-
-    auto p = promise;
-
-    webHttp->get("https://api.github.com/users/aosp", std::make_shared<HttpCallbackImpl>(
-            [p](const std::string_view &body, int32_t code) {
-                EXPECT_EQ(code, 200);
-                p->set_value();
-            }, [p](const std::string &) {
-                FAIL();
-            }));
-
-    if (future.wait_for(1s) != std::future_status::ready) {
-        FAIL();
-    }
-}
-
-TEST_F(Xptuto, WebGetUserSyncTest) {
-    auto webThreads = std::make_shared<WebThreads>();
-
-    auto p = promise;
-
-    webThreads->create_thread("WebGetUserSyncTest", std::make_shared<ThreadFuncImpl>([p](){
-        auto webHttp = std::make_shared<WebHttpClient>();
-        auto response = webHttp->get_sync("https://api.github.com/users/aosp");
-        EXPECT_EQ(response.code.value(), 200);
-        p->set_value();
-    }));
-
-    if (future.wait_for(1s) != std::future_status::ready) {
-        FAIL();
-    }
-
-}
-
-TEST_F(Xptuto, WebGet404SyncTest) {
-    auto webThreads = std::make_shared<WebThreads>();
-
-    auto p = promise;
-
-    webThreads->create_thread("WebGet404SyncTest", std::make_shared<ThreadFuncImpl>([p](){
-        auto webHttp = std::make_shared<WebHttpClient>();
-        auto response = webHttp->get_sync("https://api.github.com/users/aospppp");
-        EXPECT_EQ(response.code.value(), 404);
-        p->set_value();
-    }));
-
-    if (future.wait_for(1s) != std::future_status::ready) {
-        FAIL();
-    }
-}
-
-TEST_F(Xptuto, WebBackgroundThreadTest) {
-    auto webThreads = std::make_shared<WebThreads>();
-    auto p = promise;
-
-    auto id = std::this_thread::get_id();
-
-    webThreads->create_thread("test", std::make_shared<ThreadFuncImpl>([p, id](){
-        EXPECT_NE(id, std::this_thread::get_id());
-        p->set_value();
-    }));
-
-    if (future.wait_for(1s) != std::future_status::ready) {
-        FAIL();
-    }
-}
-
-TEST_F(Xptuto, WebMainThreadTest) {
-    auto webThreads = std::make_shared<WebThreads>();
-    auto p = promise;
-
-    webThreads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([p, webThreads](){
-        EXPECT_TRUE(webThreads->is_main_thread());
-        p->set_value();
-    }));
-
-    if (future.wait_for(1s) != std::future_status::ready) {
-        FAIL();
-    }
-}
-
-
-TEST_F(Xptuto, GetUserAndReposTest) {
-    auto webThreads = std::make_shared<WebThreads>();
-    auto instance = ::xptuto::Xptuto::make_instance(std::make_shared<WebHttpClient>(), webThreads);
-
-    auto p = promise;
-
-    instance->get_repos_for_user_name("aosp", std::make_shared<GetReposCbImpl>(
-            [p, webThreads](const std::vector<xptuto::Repo> &repos,const xptuto::User &user) {
-                EXPECT_EQ("aosp", user.login);
-                EXPECT_FALSE(repos.empty());
-                EXPECT_TRUE(webThreads->is_main_thread());
-                p->set_value();
-            }, [p](const std::string &) {
-                FAIL();
-            }
-    ));
-
-    if (future.wait_for(2s) != std::future_status::ready) {
-        FAIL();
-    }
-}
-
-
-
-#elif __APPLE__
-
-#include "apple_http_client.hpp"
-#include "http_callback_impl.hpp"
-#include "apple_threads.hpp"
-
-TEST_F(Xptuto, AppleGetUserTest) {
-    auto appleHttp = std::make_shared<AppleHttpClient>();
-
-    auto p = promise;
-
-    appleHttp->get("https://api.github.com/users/aosp", std::make_shared<HttpCallbackImpl>(
-            [p](const std::string_view & body, int32_t code) {
-                EXPECT_EQ(code, 200);
-                p->set_value();
-            }, [p](const std::string &) {
-                FAIL();
-            }));
-
-    if (future.wait_for(10s) != std::future_status::ready) {
-        FAIL();
-    }
-}
-
-TEST_F(Xptuto, AppleGetUserSyncTest) {
-    auto webHttp = std::make_shared<AppleHttpClient>();
-    auto response = webHttp->get_sync("https://api.github.com/users/aosp");
-    EXPECT_EQ(response.code.value(), 200);
-}
-
-TEST_F(Xptuto, AppleGet404SyncTest) {
-    auto webHttp = std::make_shared<AppleHttpClient>();
-    auto response = webHttp->get_sync("https://api.github.com/users/aospppp");
-    EXPECT_EQ(response.code.value(), 404);
-}
-
-TEST_F(Xptuto, AppleBackgroundThreadTest) {
-    auto appleThreads = std::make_shared<AppleThreads>();
-    auto p = promise;
-
-    auto id = std::this_thread::get_id();
-
-    appleThreads->create_thread("test", std::make_shared<ThreadFuncImpl>([p, id](){
-        EXPECT_NE(id, std::this_thread::get_id());
-        p->set_value();
-    }));
-
-    if (future.wait_for(1s) != std::future_status::ready) {
-        FAIL();
-    }
-}
-
-TEST_F(Xptuto, AppleMainThreadTest) {
-    auto appleThreads = std::make_shared<AppleThreads>();
-    auto p = promise;
-
-    appleThreads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([p, appleThreads](){
-        EXPECT_TRUE(appleThreads->is_main_thread());
-        p->set_value();
-    }));
-
-    if (future.wait_for(1s) != std::future_status::ready) {
-        FAIL();
-    }
-}
-
-#endif
-
-
-

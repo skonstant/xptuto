@@ -34,10 +34,16 @@ add_compile_definitions(TEST_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
 include_directories(../common/src/gen ../common/src/impl)
 
-file(GLOB_RECURSE SRC "*.cpp")
-# Now simply link against gtest or gtest_main as needed. Eg
-add_executable(xptutotest ${SRC})
+set(SRC xptuto_test.cpp stubs/http_client_stub.cpp stubs/platform_threads_stub.cpp)
 
+if (APPLE)
+    set(EXTRA_LIBS "-framework Foundation")
+    add_executable(xptutotest ${SRC} apple_test.mm)
+elseif (EMSCRIPTEN)
+    add_executable(xptutotest ${SRC} web_test.cpp)
+else (APPLE)
+    add_executable(xptutotest ${SRC})
+endif (APPLE)
 
 if (EMSCRIPTEN)
     set_target_properties(xptutotest PROPERTIES LINK_FLAGS " -s ALLOW_MEMORY_GROWTH=1 -s USE_PTHREADS=1 -s ALLOW_BLOCKING_ON_MAIN_THREAD=1 -s PTHREAD_POOL_SIZE=2 --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/responses -s FETCH=1 -s DISABLE_EXCEPTION_CATCHING=0")

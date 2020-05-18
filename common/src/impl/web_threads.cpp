@@ -23,6 +23,7 @@ EM_BOOL main_loop(double time, void* userData) {
     auto func = WebThreads::functionsToRun.front();
     func->run();
 
+    const std::lock_guard<std::mutex> lock(WebThreads::functionsMutex);
     WebThreads::functionsToRun.pop();
     // Return true to keep the loop running.
     return EM_TRUE;
@@ -33,6 +34,7 @@ WebThreads::WebThreads() {
 }
 
 void WebThreads::run_on_main_thread(const std::shared_ptr<ThreadFunc> &func) {
+    const std::lock_guard<std::mutex> lock(functionsMutex);
     functionsToRun.push(func);
 }
 
