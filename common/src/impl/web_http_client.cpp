@@ -21,8 +21,6 @@ void downloadSucceeded(emscripten_fetch_t *fetch) {
         }
 
         callback->on_response(body, fetch->status);
-
-        const std::lock_guard<std::mutex> lock(WebHttpClient::callbacksMutex);
         WebHttpClient::callbacks.erase(fetch->id);
     }
     emscripten_fetch_close(fetch);
@@ -41,7 +39,6 @@ void downloadFailed(emscripten_fetch_t *fetch) {
         } else {
             callback->on_failure("Download failed");
         }
-        const std::lock_guard<std::mutex> lock(WebHttpClient::callbacksMutex);
         WebHttpClient::callbacks.erase(fetch->id);
     }
     emscripten_fetch_close(fetch);
@@ -55,7 +52,6 @@ void WebHttpClient::get(const std::string &url, const std::shared_ptr<HttpCallba
     attr.onsuccess = downloadSucceeded;
     attr.onerror = downloadFailed;
     auto fetch = emscripten_fetch(&attr, url.c_str());
-    const std::lock_guard<std::mutex> lock(callbacksMutex);
     callbacks.insert({fetch->id, callback});
 }
 

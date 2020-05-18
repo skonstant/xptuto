@@ -11,7 +11,6 @@
 #include "http_callback.hpp"
 
 #include <unordered_map>
-#include <mutex>
 
 class WebHttpClient : public xptuto::HttpClient {
 
