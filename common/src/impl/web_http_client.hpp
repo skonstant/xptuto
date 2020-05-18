@@ -11,12 +11,14 @@
 #include "http_callback.hpp"
 
 #include <unordered_map>
+#include <mutex>
 
 class WebHttpClient : public xptuto::HttpClient {
 
 public:
     void get(const std::string &url, const std::shared_ptr<xptuto::HttpCallback> &callback) override;
 
+    static inline std::mutex callbacksMutex;
     static inline std::unordered_map<unsigned int, std::shared_ptr<xptuto::HttpCallback>> callbacks = {};
 };
 

@@ -14,8 +14,7 @@ using namespace djinni;
 void AppleHttpClient::get(const std::string &url, const std::shared_ptr<xptuto::HttpCallback> &callback) {
 
     auto session = [NSURLSession sharedSession];
-    auto request = [NSURLRequest requestWithURL:[[NSURL alloc] initWithString:(String::fromCpp(
-            url))]];
+    auto request = [NSURLRequest requestWithURL:[NSURL URLWithString:(String::fromCpp(url))]];
 
     __block auto cb = callback;
 
