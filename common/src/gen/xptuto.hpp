@@ -26,6 +26,8 @@ public:
     virtual void get_users(const std::shared_ptr<GetUsersCb> & cb) = 0;
 
     virtual void get_repos_for_user(const User & usr, const std::shared_ptr<GetReposCb> & cb) = 0;
+
+    virtual void get_repos_for_user_name(const std::string & username, const std::shared_ptr<GetReposCb> & cb) = 0;
 };
 
 }  // namespace xptuto

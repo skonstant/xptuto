@@ -13,6 +13,7 @@
 #include <get_repos_cb_impl.hpp>
 #include "thread_func_impl.hpp"
 #include "web_threads.hpp"
+#include "xptuto_impl.hpp"
 
 #include <future>
 
@@ -90,6 +91,27 @@ TEST_F(Xptuto, GetReposTest) {
     }
 }
 
+TEST_F(Xptuto, GetUserSyncTest) {
+    auto instance = std::make_shared<XptutoImpl>(stubHttp, stubThreads);
+    stubHttp->path = "/responses/users_aosp.json";
+
+    auto user = instance->get_user_sync("aosp");
+    EXPECT_EQ("aosp", user->login);
+}
+
+TEST_F(Xptuto, GetRepoSyncTest) {
+    auto instance = std::make_shared<XptutoImpl>(stubHttp, stubThreads);
+    stubHttp->path = "/responses/users_aosp.json";
+
+    auto user = instance->get_user_sync("aosp");
+    EXPECT_EQ("aosp", user->login);
+
+    stubHttp->path = "/responses/repos_aosp.json";
+    auto repos = instance->get_repos_sync(user.value());
+    EXPECT_FALSE(repos.empty());
+}
+
+
 TEST_F(Xptuto, BackgroundThreadTest) {
     auto p = promise;
 
@@ -144,15 +166,38 @@ TEST_F(Xptuto, WebGetUserTest) {
 }
 
 TEST_F(Xptuto, WebGetUserSyncTest) {
-    auto webHttp = std::make_shared<WebHttpClient>();
-    auto response = webHttp->get_sync("https://api.github.com/users/aosp");
-    EXPECT_EQ(response.code.value(), 200);
+    auto webThreads = std::make_shared<WebThreads>();
+
+    auto p = promise;
+
+    webThreads->create_thread("WebGetUserSyncTest", std::make_shared<ThreadFuncImpl>([p](){
+        auto webHttp = std::make_shared<WebHttpClient>();
+        auto response = webHttp->get_sync("https://api.github.com/users/aosp");
+        EXPECT_EQ(response.code.value(), 200);
+        p->set_value();
+    }));
+
+    if (future.wait_for(1s) != std::future_status::ready) {
+        FAIL();
+    }
+
 }
 
 TEST_F(Xptuto, WebGet404SyncTest) {
-    auto webHttp = std::make_shared<WebHttpClient>();
-    auto response = webHttp->get_sync("https://api.github.com/users/aospppp");
-    EXPECT_EQ(response.code.value(), 404);
+    auto webThreads = std::make_shared<WebThreads>();
+
+    auto p = promise;
+
+    webThreads->create_thread("WebGet404SyncTest", std::make_shared<ThreadFuncImpl>([p](){
+        auto webHttp = std::make_shared<WebHttpClient>();
+        auto response = webHttp->get_sync("https://api.github.com/users/aospppp");
+        EXPECT_EQ(response.code.value(), 404);
+        p->set_value();
+    }));
+
+    if (future.wait_for(1s) != std::future_status::ready) {
+        FAIL();
+    }
 }
 
 TEST_F(Xptuto, WebBackgroundThreadTest) {
@@ -184,6 +229,30 @@ TEST_F(Xptuto, WebMainThreadTest) {
         FAIL();
     }
 }
+
+
+TEST_F(Xptuto, GetUserAndReposTest) {
+    auto webThreads = std::make_shared<WebThreads>();
+    auto instance = ::xptuto::Xptuto::make_instance(std::make_shared<WebHttpClient>(), webThreads);
+
+    auto p = promise;
+
+    instance->get_repos_for_user_name("aosp", std::make_shared<GetReposCbImpl>(
+            [p, webThreads](const std::vector<xptuto::Repo> &repos,const xptuto::User &user) {
+                EXPECT_EQ("aosp", user.login);
+                EXPECT_FALSE(repos.empty());
+                EXPECT_TRUE(webThreads->is_main_thread());
+                p->set_value();
+            }, [p](const std::string &) {
+                FAIL();
+            }
+    ));
+
+    if (future.wait_for(2s) != std::future_status::ready) {
+        FAIL();
+    }
+}
+
 
 
 #elif __APPLE__

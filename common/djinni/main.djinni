@@ -50,6 +50,8 @@ xptuto = interface +c {
     get_users(cb : get_users_cb);
 
     get_repos_for_user(usr: user, cb: get_repos_cb);
+
+    get_repos_for_user_name(username: string, cb: get_repos_cb);
 }
 
 http_callback = interface +c {

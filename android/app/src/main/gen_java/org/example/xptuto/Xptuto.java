@@ -12,6 +12,8 @@ public abstract class Xptuto {
 
     public abstract void getReposForUser(User usr, GetReposCb cb);
 
+    public abstract void getReposForUserName(String username, GetReposCb cb);
+
     public static Xptuto makeInstance(HttpClient client, PlatformThreads threads)
     {
         return CppProxy.makeInstance(client,
@@ -64,6 +66,14 @@ public abstract class Xptuto {
             native_getReposForUser(this.nativeRef, usr, cb);
         }
         private native void native_getReposForUser(long _nativeRef, User usr, GetReposCb cb);
+
+        @Override
+        public void getReposForUserName(String username, GetReposCb cb)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_getReposForUserName(this.nativeRef, username, cb);
+        }
+        private native void native_getReposForUserName(long _nativeRef, String username, GetReposCb cb);
 
         public static native Xptuto makeInstance(HttpClient client, PlatformThreads threads);
     }

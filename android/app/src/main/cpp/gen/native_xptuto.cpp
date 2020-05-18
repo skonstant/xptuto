@@ -64,4 +64,14 @@ CJNIEXPORT void JNICALL Java_org_example_xptuto_Xptuto_00024CppProxy_native_1get
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT void JNICALL Java_org_example_xptuto_Xptuto_00024CppProxy_native_1getReposForUserName(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jstring j_username, jobject j_cb)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::xptuto::Xptuto>(nativeRef);
+        ref->get_repos_for_user_name(::djinni::String::toCpp(jniEnv, j_username),
+                                     ::djinni_generated::NativeGetReposCb::toCpp(jniEnv, j_cb));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
 }  // namespace djinni_generated

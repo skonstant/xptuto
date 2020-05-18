@@ -10,36 +10,30 @@
 
 using namespace xptuto;
 
-EM_BOOL one_iter(double time, void* userData) {
+EM_BOOL main_loop(double time, void* userData) {
+
+    if (!WebThreads::main_thread_id) {
+        WebThreads::main_thread_id = std::this_thread::get_id();
+    }
+
     if (WebThreads::functionsToRun.empty()) {
-        return EM_FALSE;
+        return EM_TRUE;
     }
 
     auto func = WebThreads::functionsToRun.front();
     func->run();
 
     WebThreads::functionsToRun.pop();
-
-    if (WebThreads::functionsToRun.empty()) {
-        return EM_FALSE;
-    } else {
-        // Return true to keep the loop running.
-        return EM_TRUE;
-    }
-}
-
-EM_BOOL get_main_thread(double time, void* userData) {
-    WebThreads::main_thread_id = std::this_thread::get_id();
-    return EM_FALSE;
+    // Return true to keep the loop running.
+    return EM_TRUE;
 }
 
 WebThreads::WebThreads() {
-    emscripten_request_animation_frame_loop(get_main_thread, nullptr);
+    emscripten_request_animation_frame_loop(main_loop, nullptr);
 }
 
 void WebThreads::run_on_main_thread(const std::shared_ptr<ThreadFunc> &func) {
     functionsToRun.push(func);
-    emscripten_request_animation_frame_loop(one_iter, nullptr);
 }
 
 bool WebThreads::is_main_thread() {
