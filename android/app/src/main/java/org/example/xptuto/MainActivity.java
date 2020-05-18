@@ -49,5 +49,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        x.getReposForUserName("aosp", new GetReposCb() {
+            @Override
+            public void onSuccess(ArrayList<Repo> repos, User u) {
+                Log.d(TAG, "got user with login: " + u.login);
+                for (Repo repo : repos) {
+                    Log.d(TAG, "Got a repo with name: " + repo.name);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e(TAG, "Error: " + error);
+            }
+        });
+
     }
 }
