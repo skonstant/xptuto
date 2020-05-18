@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		552E8B9DA012EBD2A6E85A31 /* xptuto_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 552E8902D059B3B1BDA731FB /* xptuto_impl.cpp */; };
+		552E8F1FCD470E5A7A5E350A /* apple_threads.mm in Sources */ = {isa = PBXBuildFile; fileRef = 552E8237535337BC485CFDC4 /* apple_threads.mm */; };
+		552E8F5383ABE26EB92970EB /* base_threads.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 552E89161862E05DF3AE28C5 /* base_threads.cpp */; };
 		F406110C247038BF0097FD26 /* get_repos_cb_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4061109247038BE0097FD26 /* get_repos_cb_impl.cpp */; };
 		F406110D247038BF0097FD26 /* get_user_cb_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F406110B247038BF0097FD26 /* get_user_cb_impl.cpp */; };
 		F448D3A7246F51DE002DBE83 /* get_users_cb_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F448D39F246F51DE002DBE83 /* get_users_cb_impl.cpp */; };
@@ -24,10 +26,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		552E8229A10AF4F368235BD8 /* base_threads.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = base_threads.hpp; sourceTree = "<group>"; };
+		552E8237535337BC485CFDC4 /* apple_threads.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = apple_threads.mm; sourceTree = "<group>"; };
 		552E865DC5EA54049B73D80F /* xptuto.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xptuto.hpp; sourceTree = "<group>"; };
+		552E87B99C28C48B23BB30FD /* apple_threads.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = apple_threads.hpp; sourceTree = "<group>"; };
 		552E887A408B5344D202ABC8 /* user.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = user.hpp; sourceTree = "<group>"; };
 		552E8902D059B3B1BDA731FB /* xptuto_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xptuto_impl.cpp; sourceTree = "<group>"; };
+		552E89161862E05DF3AE28C5 /* base_threads.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = base_threads.cpp; sourceTree = "<group>"; };
 		552E8A2D2F1B125EE62303E2 /* repo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = repo.hpp; sourceTree = "<group>"; };
+		552E8CAA7FDD4B77EC379C32 /* platform_threads.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform_threads.hpp; sourceTree = "<group>"; };
+		552E8D263BDAB733DC59F270 /* thread_func.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = thread_func.hpp; sourceTree = "<group>"; };
 		552E8FB32EE41F47FED70338 /* xptuto_impl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xptuto_impl.hpp; sourceTree = "<group>"; };
 		F4061108247038BE0097FD26 /* get_repos_cb_impl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = get_repos_cb_impl.hpp; sourceTree = "<group>"; };
 		F4061109247038BE0097FD26 /* get_repos_cb_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = get_repos_cb_impl.cpp; sourceTree = "<group>"; };
@@ -100,6 +108,8 @@
 				552E8A2D2F1B125EE62303E2 /* repo.hpp */,
 				552E887A408B5344D202ABC8 /* user.hpp */,
 				552E865DC5EA54049B73D80F /* xptuto.hpp */,
+				552E8CAA7FDD4B77EC379C32 /* platform_threads.hpp */,
+				552E8D263BDAB733DC59F270 /* thread_func.hpp */,
 			);
 			path = gen;
 			sourceTree = "<group>";
@@ -121,6 +131,10 @@
 				F448D39C246F51DE002DBE83 /* json_parser.hpp */,
 				552E8902D059B3B1BDA731FB /* xptuto_impl.cpp */,
 				552E8FB32EE41F47FED70338 /* xptuto_impl.hpp */,
+				552E87B99C28C48B23BB30FD /* apple_threads.hpp */,
+				552E8237535337BC485CFDC4 /* apple_threads.mm */,
+				552E89161862E05DF3AE28C5 /* base_threads.cpp */,
+				552E8229A10AF4F368235BD8 /* base_threads.hpp */,
 			);
 			path = impl;
 			sourceTree = "<group>";
@@ -265,6 +279,8 @@
 				F4AB790C245E06E100043156 /* SceneDelegate.mm in Sources */,
 				552E8B9DA012EBD2A6E85A31 /* xptuto_impl.cpp in Sources */,
 				F448D3A9246F51DE002DBE83 /* http_callback_impl.cpp in Sources */,
+				552E8F1FCD470E5A7A5E350A /* apple_threads.mm in Sources */,
+				552E8F5383ABE26EB92970EB /* base_threads.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

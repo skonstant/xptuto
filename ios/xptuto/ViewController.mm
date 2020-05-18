@@ -14,6 +14,7 @@
 #include "get_user_cb_impl.hpp"
 #include "get_repos_cb_impl.hpp"
 #include "apple_http_client.hpp"
+#include "apple_threads.hpp"
 
 using namespace xptuto;
 
@@ -22,7 +23,7 @@ using namespace xptuto;
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    auto x = Xptuto::make_instance(std::make_shared<AppleHttpClient>());
+    auto x = Xptuto::make_instance(std::make_shared<AppleHttpClient>(), std::make_shared<AppleThreads>());
     x->get_user("aosp", std::make_shared<GetUserCbImpl>(
             [x](const User &user) {
                 NSLog(@"Got user with login: %s", user.login.c_str());
@@ -39,6 +40,18 @@ using namespace xptuto;
             }, [](const std::string &error) {
                 NSLog(@"error: %s", error.c_str());
             }));
+
+    x->get_repos_for_user_name("aosp", std::make_shared<GetReposCbImpl>(
+                        [](const std::vector <Repo> &repos, const User &user) {
+                            NSLog(@"Got user with login: %s", user.login.c_str());
+
+                            for (const auto &repo : repos) {
+                                NSLog(@"Got repo with name: %s", repo.name.c_str());
+                            }
+
+                        }, [](const std::string &error) {
+                            NSLog(@"error: %s", error.c_str());
+                        }));
 }
 
 
