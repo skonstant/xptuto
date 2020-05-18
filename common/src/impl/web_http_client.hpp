@@ -11,6 +11,7 @@
 #include "http_callback.hpp"
 
 #include <unordered_map>
+#include <mutex>
 
 class WebHttpClient : public xptuto::HttpClient {
 
@@ -19,6 +20,7 @@ public:
 
     xptuto::HttpResponse get_sync(const std::string &url) override;
 
+    static inline std::mutex callbacksMutex;
     static inline std::unordered_map<unsigned int, std::shared_ptr<xptuto::HttpCallback>> callbacks = {};
 };
 
