@@ -43,9 +43,7 @@ void AppleHttpClient::get(const std::string &url, const std::shared_ptr<xptuto::
 }
 
 xptuto::HttpResponse AppleHttpClient::get_sync(const std::string &url) {
-    auto request = [NSURLRequest requestWithURL:[[NSURL alloc] initWithString:(String::fromCpp(
-            url))]];
-
+    auto request = [NSURLRequest requestWithURL:[NSURL URLWithString:(String::fromCpp(url))]];
 
     NSHTTPURLResponse *response;
     NSError *error = nil;
