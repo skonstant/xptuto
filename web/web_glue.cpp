@@ -10,6 +10,7 @@
 #include <get_repos_cb.hpp>
 
 #include "web_http_client.hpp"
+#include "web_threads.hpp"
 
 using namespace xptuto;
 
@@ -40,7 +41,7 @@ emscripten::val toJsDate(std::chrono::system_clock::time_point timePoint) {
 }
 
 std::shared_ptr<xptuto::Xptuto> createInstance() {
-    return xptuto::Xptuto::make_instance(std::make_shared<WebHttpClient>());
+    return xptuto::Xptuto::make_instance(std::make_shared<WebHttpClient>(), std::make_shared<WebThreads>());
 }
 
 class JSInterface {
@@ -125,7 +126,8 @@ EMSCRIPTEN_BINDINGS(xptuto) {
             .smart_ptr<std::shared_ptr<Xptuto>>("Xptuto")
             .function("get_users", &Xptuto::get_users)
             .function("get_user", &Xptuto::get_user)
-            .function("get_repos_for_user", &Xptuto::get_repos_for_user);
+            .function("get_repos_for_user", &Xptuto::get_repos_for_user)
+            .function("get_repos_for_user_name", &Xptuto::get_repos_for_user_name);
 
     emscripten::class_<GetUsersCb>("GetUsersCb")
             .smart_ptr<std::shared_ptr<GetUsersCb>>("GetUsersCb");

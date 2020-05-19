@@ -6,25 +6,18 @@
     <script>
     var Module = {
       onRuntimeInitialized: function() {
-        var x = Module.createInstance();
-                x.get_user("aosp", new Module.JSGetUserCb({
-                    on_error: function(error) {
-                        console.error(error)
-                    },
-                    on_success: function(user) {
-                        console.log('Got user with name: ' + user.login);
-                        x.get_repos_for_user(user, new Module.JSGetReposCb({
-                            on_error: function(error) {
-                                console.error(error)
-                            },
-                            on_success: function(repos, user) {
-                                for (var i = 0; i < repos.size(); i++) {
-                                    console.log('Got repo with name: ' + repos.get(i).name);
-                                }
-                            }
-                        }));
-                    }
-                }));
+          var x = Module.createInstance();
+          x.get_repos_for_user_name("aosp", new Module.JSGetReposCb({
+              on_error: function (error) {
+                  console.error(error)
+              },
+              on_success: function (repos, user) {
+                  console.log('Got user with name: ' + user.login);
+                  for (var i = 0; i < repos.size(); i++) {
+                      console.log('Got repo with name: ' + repos.get(i).name);
+                  }
+              }
+          }));
       }
     };
 

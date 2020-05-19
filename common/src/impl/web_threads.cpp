@@ -11,11 +11,6 @@
 using namespace xptuto;
 
 EM_BOOL main_loop(double time, void* userData) {
-
-    if (!WebThreads::main_thread_id) {
-        WebThreads::main_thread_id = std::this_thread::get_id();
-    }
-
     if (WebThreads::functionsToRun.empty()) {
         return EM_TRUE;
     }
@@ -29,7 +24,7 @@ EM_BOOL main_loop(double time, void* userData) {
     return EM_TRUE;
 }
 
-WebThreads::WebThreads() {
+WebThreads::WebThreads() : main_thread_id(std::this_thread::get_id()) {
     emscripten_request_animation_frame_loop(main_loop, nullptr);
 }
 

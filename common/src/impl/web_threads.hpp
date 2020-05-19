@@ -23,7 +23,7 @@ public:
 
     static inline std::mutex functionsMutex;
     static inline std::queue<std::shared_ptr<xptuto::ThreadFunc>> functionsToRun;
-    static inline std::optional<std::thread::id> main_thread_id;
+    const std::thread::id main_thread_id;
 };
 
 
