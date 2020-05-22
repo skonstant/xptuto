@@ -16,6 +16,8 @@ struct User final {
     std::string avatar_url;
     std::chrono::system_clock::time_point created_at;
 
+    User(){};
+
     User(std::string login_,
          int32_t id_,
          std::string avatar_url_,
