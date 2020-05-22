@@ -20,6 +20,8 @@ struct Repo final {
     std::optional<std::string> descr;
     std::chrono::system_clock::time_point created_at;
 
+    Repo() {}
+
     Repo(int32_t id_,
          std::string name_,
          std::string full_name_,

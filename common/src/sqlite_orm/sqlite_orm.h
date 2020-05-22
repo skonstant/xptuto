@@ -356,7 +356,6 @@ namespace sqlite_orm {
 #include <string>  //  std::string
 #include <memory>  //  std::shared_ptr, std::unique_ptr
 #include <vector>  //  std::vector
-#include <chrono>
 #ifdef SQLITE_ORM_OPTIONAL_SUPPORTED
 #include <optional>  // std::optional
 #endif  // SQLITE_ORM_OPTIONAL_SUPPORTED
@@ -454,9 +453,6 @@ namespace sqlite_orm {
 
     template<class T>
     struct type_printer<std::unique_ptr<T>, void> : public type_printer<T> {};
-
-    template<>
-    struct type_printer<std::chrono::system_clock::time_point, void> : public integer_printer {};
 
 #ifdef SQLITE_ORM_OPTIONAL_SUPPORTED
     template<class T>
@@ -1645,16 +1641,6 @@ namespace sqlite_orm {
         }
     };
 #endif  // SQLITE_ORM_OPTIONAL_SUPPORTED
-
-    template<>
-    struct field_printer<std::chrono::system_clock::time_point> {
-        std::string operator()(const std::chrono::system_clock::time_point &t) const {
-            std::stringstream stream;
-            stream << std::chrono::duration_cast<std::chrono::milliseconds>(t.time_since_epoch()).count();
-            return stream.str();
-        }
-    };
-
 }
 #pragma once
 
@@ -4681,17 +4667,6 @@ namespace sqlite_orm {
     };
 #endif  //  SQLITE_ORM_OPTIONAL_SUPPORTED
 
-    /**
-     *  Specialization for std::chrono::system_clock::time_point.
-     */
-    template<>
-    struct statement_binder<std::chrono::system_clock::time_point> {
-        int bind(sqlite3_stmt *stmt, int index, const std::chrono::system_clock::time_point &value) {
-            auto val = std::chrono::duration_cast<std::chrono::milliseconds>(value.time_since_epoch()).count();
-            return sqlite3_bind_int64(stmt, index, static_cast<sqlite3_int64>(val));
-        }
-    };
-
     namespace internal {
 
         template<class T>
@@ -5104,24 +5079,6 @@ namespace sqlite_orm {
         journal_mode extract(sqlite3_stmt *stmt, int columnIndex) {
             auto cStr = (const char *)sqlite3_column_text(stmt, columnIndex);
             return this->extract(cStr);
-        }
-    };
-
-    /**
-     *  Specialization for std::chrono::system_clock::time_point.
-     */
-    template<>
-    struct row_extractor<std::chrono::system_clock::time_point> {
-        std::chrono::system_clock::time_point extract(const char *row_value) {
-            auto millis = atoll(row_value);
-            std::chrono::system_clock::time_point tp;
-            return tp + std::chrono::milliseconds(millis);
-        }
-
-        std::chrono::system_clock::time_point extract(sqlite3_stmt *stmt, int columnIndex) {
-            auto millis = sqlite3_column_int64(stmt, columnIndex);
-            std::chrono::system_clock::time_point tp;
-            return tp + std::chrono::milliseconds(millis);
         }
     };
 }
