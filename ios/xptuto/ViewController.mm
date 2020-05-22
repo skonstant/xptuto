@@ -15,6 +15,7 @@
 #include "get_repos_cb_impl.hpp"
 #include "apple_http_client.hpp"
 #include "apple_threads.hpp"
+#include "xptuto_impl.hpp"
 
 using namespace xptuto;
 
@@ -52,6 +53,7 @@ using namespace xptuto;
                         }, [](const std::string &error) {
                             NSLog(@"error: %s", error.c_str());
                         }));
+    XptutoImpl::check_sqlite3();
 }
 
 

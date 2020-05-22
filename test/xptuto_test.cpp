@@ -140,3 +140,48 @@ TEST_F(Xptuto, MainThreadTest) {
         FAIL();
     }
 }
+
+TEST_F(Xptuto, CheckSqliteTest) {
+    XptutoImpl::check_sqlite3();
+}
+
+#include "sqlite_orm.h"
+
+int64_t getRepr(std::chrono::system_clock::time_point tp) {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch()).count();
+}
+
+std::chrono::system_clock::time_point setTimePoint(int64_t millis) {
+    std::chrono::system_clock::time_point tp;
+    return tp + std::chrono::milliseconds(millis);
+}
+
+TEST_F(Xptuto, OrmTest) {
+
+    using namespace sqlite_orm;
+    using namespace xptuto;
+    auto storage = make_storage(":memory:",
+                                make_table("users",
+                                           make_column("id", &User::id, primary_key()),
+                                           make_column("login", &User::login),
+                                           make_column("avatar_url", &User::avatar_url),
+                                           make_column("created_at", &User::created_at)),
+                                make_table("repos",
+                                           make_column("id", &Repo::id, primary_key()),
+                                           make_column("name", &Repo::name),
+                                           make_column("full_name", &Repo::full_name),
+                                           make_column("owner", &Repo::owner),
+                                           make_column("priv", &Repo::priv),
+                                           make_column("descr", &Repo::descr)));
+                                           //make_column("created_at", &Repo::created_at)));
+    storage.sync_schema();
+
+    auto instance = std::make_shared<XptutoImpl>(stubHttp, stubThreads);
+    stubHttp->path = "/responses/users_aosp.json";
+
+    auto user = instance->get_user_sync("aosp");
+    auto insertedId = storage.insert(*user);
+
+    EXPECT_EQ(storage.count<User>(), 1);
+
+}

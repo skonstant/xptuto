@@ -23,6 +23,7 @@
 		F4AB7917245E06E900043156 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4AB7915245E06E900043156 /* LaunchScreen.storyboard */; };
 		F4AB791A245E06E900043156 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = F4AB7919245E06E900043156 /* main.mm */; };
 		F4AB7922245E082D00043156 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4AB7921245E082D00043156 /* UIKit.framework */; };
+		F4B4A0B32477DCED007CF3C3 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B4A0B22477DCEC007CF3C3 /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		F4AB7918245E06E900043156 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4AB7919245E06E900043156 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		F4AB7921245E082D00043156 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		F4B4A0B22477DCEC007CF3C3 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4B4A0B32477DCED007CF3C3 /* libsqlite3.tbd in Frameworks */,
 				F4AB7922245E082D00043156 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -194,6 +197,7 @@
 		F4AB7920245E082D00043156 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F4B4A0B22477DCEC007CF3C3 /* libsqlite3.tbd */,
 				F4AB7921245E082D00043156 /* UIKit.framework */,
 			);
 			name = Frameworks;

@@ -5,6 +5,9 @@
 #include "xptuto_impl.hpp"
 
 #include <utility>
+
+#include <sqlite3.h>
+
 #include "http_client.hpp"
 #include "http_callback_impl.hpp"
 #include "get_users_cb.hpp"
@@ -17,6 +20,10 @@
 
 using namespace xptuto;
 using namespace std::chrono_literals;
+
+void XptutoImpl::check_sqlite3() {
+    printf("sqlite version : %s", sqlite3_libversion());
+}
 
 std::shared_ptr<Xptuto> xptuto::Xptuto::make_instance(const std::shared_ptr<HttpClient> &client,
         const std::shared_ptr<PlatformThreads> & threads) {
