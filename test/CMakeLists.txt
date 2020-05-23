@@ -47,7 +47,11 @@ endif (APPLE)
 
 find_package (SQLite3)
 if (SQLITE3_FOUND)
-    set(EXTRA_LIBS "${EXTRA_LIBS} ${SQLite3_LIBRARIES}")
+    if (EXTRA_LIBS)
+        set(EXTRA_LIBS "${EXTRA_LIBS} ${SQLite3_LIBRARIES}")
+    else (EXTRA_LIBS)
+        set(EXTRA_LIBS "${SQLite3_LIBRARIES}")
+    endif (EXTRA_LIBS)
 endif (SQLITE3_FOUND)
 
 if (EMSCRIPTEN)

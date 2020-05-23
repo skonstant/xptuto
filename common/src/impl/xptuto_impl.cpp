@@ -27,10 +27,18 @@ void XptutoImpl::check_sqlite3() {
 
 std::shared_ptr<Xptuto> xptuto::Xptuto::make_instance(const std::shared_ptr<HttpClient> &client,
         const std::shared_ptr<PlatformThreads> & threads) {
-    return std::make_shared<XptutoImpl>(client, threads);
+    if (!XptutoImpl::instance) {
+        return std::make_shared<XptutoImpl>(client, threads);
+    } else {
+        return XptutoImpl::instance;
+    }
 }
 
-XptutoImpl::XptutoImpl(std::shared_ptr<xptuto::HttpClient> cl, std::shared_ptr<PlatformThreads>  threads) : client(std::move(cl)), threads(std::move(threads)) {}
+XptutoImpl::XptutoImpl(std::shared_ptr<xptuto::HttpClient> cl, std::shared_ptr<PlatformThreads> threads) : client(
+        std::move(cl)),
+                                                                                                           threads(std::move(
+                                                                                                                   threads)),
+                                                                                                           storage(":memory:") {}
 
 void XptutoImpl::get_users(const std::shared_ptr<GetUsersCb> &cb) {
     // no local users fror now
@@ -62,23 +70,40 @@ void XptutoImpl::get_repos_for_user(const User &user, const std::shared_ptr<GetR
 void XptutoImpl::get_user(const std::string &login, const std::shared_ptr<GetUserCb> &cb) {
     auto me = shared_from_this();
 
-    client->get("https://api.github.com/users/" + login,
-                std::make_shared<HttpCallbackImpl>([cb, me](const std::string_view &body, int32_t code) {
-                    if (!std::empty(body)) {
-                        User user = nlohmann::json::parse(body);
-                        me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, user](){
-                            cb->on_success(user);
-                        }));
-                    } else {
-                        me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb](){
-                            cb->on_error("error");
-                        }));
-                    }
-                }, [cb, me](const std::string &) {
-                    me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb](){
-                        cb->on_error("error");
-                    }));
+    threads->create_thread("get_user", std::make_shared<ThreadFuncImpl>([me, cb, login]() {
+        try {
+            try {
+                auto user = me->storage.get_user(login);
+                me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, user]() {
+                    cb->on_success(user);
                 }));
+                try {
+                    auto userOpt = me->get_user_sync(login);
+                    if (userOpt) {
+                        me->storage.store_user(userOpt.value());
+                    }
+                } catch (...) {
+                    //PASS
+                }
+            } catch (...) {
+                auto user = me->get_user_sync(login);
+                if (!user) {
+                    me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb]() {
+                        cb->on_error("could not load user");
+                    }));
+                } else {
+                    me->storage.store_user(user.value());
+                    me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, user]() {
+                        cb->on_success(user.value());
+                    }));
+                }
+            }
+        } catch (...) {
+            me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb]() {
+                cb->on_error("could not load user");
+            }));
+        }
+    }));
 }
 
 void XptutoImpl::get_repos_for_user_name(const std::string &username, const std::shared_ptr<xptuto::GetReposCb> &cb) {
@@ -86,20 +111,32 @@ void XptutoImpl::get_repos_for_user_name(const std::string &username, const std:
 
     threads->create_thread("get_repos_for_user_name", std::make_shared<ThreadFuncImpl>([me, cb, username](){
         try {
-            auto user = me->get_user_sync(username);
-            if (!user) {
-                me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb](){
-                    cb->on_error("could not load user");
-                }));
-            } else {
-                try {
-                    auto repos = me->get_repos_sync(user.value());
-                    me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, repos, user](){
-                        cb->on_success(repos, user.value());
-                    }));
-                } catch (...) {
-                    me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, user](){
-                        cb->on_error("could not load repos for user: " + user->login);
+            std::optional<User> user;
+            try {
+                user = me->storage.get_user(username);
+                auto repos = me->storage.get_repos(username);
+                cb->on_success(repos, user.value());
+                repos = me->get_repos_sync(user.value());
+                me->storage.store_repos(repos);
+                return;
+            } catch (...) {
+                user = me->get_user_sync(username);
+                if (user) {
+                    me->storage.store_user(user.value());
+                    try {
+                        auto repos = me->get_repos_sync(user.value());
+                        me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, repos, user]() {
+                            cb->on_success(repos, user.value());
+                        }));
+                        me->storage.store_repos(repos);
+                    } catch (...) {
+                        me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, user]() {
+                            cb->on_error("could not load repos for user: " + user->login);
+                        }));
+                    }
+                } else {
+                    me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb]() {
+                        cb->on_error("could not load user");
                     }));
                 }
             }
