@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">XpTuto</string>
+    <string name="user_name">User name</string>
+    <string name="xp_tuto">XP Tutorial</string>
+    <string name="view_repos">View Repositories</string>
+    <string name="avatar">avatar</string>
+    <string name="no_user_found">No user found. Try again.</string>
+    <string name="title_activity_list">Repositories</string>
+    <string name="created_on">Created on: %s</string>
 </resources>
