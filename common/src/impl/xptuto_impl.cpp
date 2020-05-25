@@ -28,10 +28,10 @@ void XptutoImpl::check_sqlite3() {
 std::shared_ptr<Xptuto> xptuto::Xptuto::make_instance(const std::shared_ptr<HttpClient> &client,
         const std::shared_ptr<PlatformThreads> & threads) {
     if (!XptutoImpl::instance) {
-        return std::make_shared<XptutoImpl>(client, threads);
-    } else {
-        return XptutoImpl::instance;
+        XptutoImpl::instance = std::make_shared<XptutoImpl>(client, threads);
     }
+
+    return XptutoImpl::instance;
 }
 
 XptutoImpl::XptutoImpl(std::shared_ptr<xptuto::HttpClient> cl, std::shared_ptr<PlatformThreads> threads) : client(
@@ -115,10 +115,24 @@ void XptutoImpl::get_repos_for_user_name(const std::string &username, const std:
             try {
                 user = me->storage.get_user(username);
                 auto repos = me->storage.get_repos(username);
-                cb->on_success(repos, user.value());
-                repos = me->get_repos_sync(user.value());
-                me->storage.store_repos(repos);
-                return;
+                if (!repos.empty()) {
+                    cb->on_success(repos, user.value());
+                    repos = me->get_repos_sync(user.value());
+                    me->storage.store_repos(repos);
+                    return;
+                } else {
+                    try {
+                        repos = me->get_repos_sync(user.value());
+                        me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, repos, user]() {
+                            cb->on_success(repos, user.value());
+                        }));
+                        me->storage.store_repos(repos);
+                    } catch (...) {
+                        me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, user]() {
+                            cb->on_error("could not load repos for user: " + user->login);
+                        }));
+                    }
+                }
             } catch (...) {
                 user = me->get_user_sync(username);
                 if (user) {
@@ -150,7 +164,7 @@ void XptutoImpl::get_repos_for_user_name(const std::string &username, const std:
 
 std::optional<xptuto::User> XptutoImpl::get_user_sync(const std::string &login) {
     auto response = client->get_sync("https://api.github.com/users/" + login);
-    if (response.body && !std::empty(response.body.value())) {
+    if (response.code == 200 && response.body && !std::empty(response.body.value())) {
         return nlohmann::json::parse(response.body.value());
     } else {
         return std::nullopt;
