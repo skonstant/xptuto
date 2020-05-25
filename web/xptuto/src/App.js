@@ -47,6 +47,7 @@ class NameForm extends React.Component {
         this.state = {value: ''};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.callback = null;
     }
 
     handleChange(event) {
@@ -54,23 +55,22 @@ class NameForm extends React.Component {
     }
 
     handleSubmit(event) {
-        console.log("loading user: " + this.state.value);
         if (this.state && this.state.value && this.state.value.length > 0) {
-            var that = this;
-            // eslint-disable-next-line no-undef
-            window.xptuto.get_repos_for_user_name(this.state.value, new Module.JSGetReposCb({
-                on_error: function (error) {
-                    console.error(error)
-                },
-                on_success: function (repos, user) {
-                    console.log('Got user with name: ' + user.login);
-                    that.props.onUserChange(user);
-                    for (var i = 0; i < repos.size(); i++) {
-                        console.log('Got repo with name: ' + repos.get(i).name);
+            if (!this.callback) {
+                var that = this;
+                // eslint-disable-next-line no-undef
+                this.callback = new Module.JSGetReposCb({
+                    on_error: function (error) {
+                        console.error(error)
+                    },
+                    on_success: function (repos, user) {
+                        that.props.onUserChange(user);
+                        that.props.onReposChange(repos);
                     }
-                    that.props.onReposChange(repos);
-                }
-            }));
+                });
+            }
+
+            window.xptuto.get_repos_for_user_name(this.state.value, this.callback);
         }
         event.preventDefault();
     }
@@ -103,7 +103,6 @@ class App extends React.Component {
 
     handleUserChange(user) {
         this.setState({currentUser: user, currentRepos: this.state.currentRepos});
-        console.log('Got user with name: ' + user.login);
     }
 
     handleReposChange(repos) {
