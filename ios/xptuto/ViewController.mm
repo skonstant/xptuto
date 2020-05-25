@@ -16,6 +16,9 @@
 #include "apple_http_client.hpp"
 #include "apple_threads.hpp"
 #include "xptuto_impl.hpp"
+#import "DJIMarshal+Private.h"
+#import "ListViewController.h"
+#import <SDWebImage/SDWebImage.h>
 
 using namespace xptuto;
 
@@ -23,38 +26,58 @@ using namespace xptuto;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    auto x = Xptuto::make_instance(std::make_shared<AppleHttpClient>(), std::make_shared<AppleThreads>());
-    x->get_user("aosp", std::make_shared<GetUserCbImpl>(
-            [x](const User &user) {
-                NSLog(@"Got user with login: %s", user.login.c_str());
-
-                x->get_repos_for_user(user, std::make_shared<GetReposCbImpl>(
-                        [](const std::vector <Repo> &repos, const User &user) {
-                            for (const auto &repo : repos) {
-                                NSLog(@"Got repo with name: %s", repo.name.c_str());
-                            }
-
-                        }, [](const std::string &error) {
-                            NSLog(@"error: %s", error.c_str());
-                        }));
-            }, [](const std::string &error) {
-                NSLog(@"error: %s", error.c_str());
-            }));
-
-    x->get_repos_for_user_name("aosp", std::make_shared<GetReposCbImpl>(
-                        [](const std::vector <Repo> &repos, const User &user) {
-                            NSLog(@"Got user with login: %s", user.login.c_str());
-
-                            for (const auto &repo : repos) {
-                                NSLog(@"Got repo with name: %s", repo.name.c_str());
-                            }
-
-                        }, [](const std::string &error) {
-                            NSLog(@"error: %s", error.c_str());
-                        }));
-    XptutoImpl::check_sqlite3();
+    _dateFormatter = [NSDateFormatter new];
+    _dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+    _dateFormatter.timeStyle = NSDateFormatterNoStyle;
 }
 
+- (void)hideDetails {
+    _userNameLabel.hidden = true;
+    _createdLabel.hidden = true;
+    _avatar.image = nullptr;
+    _avatar.hidden = true;
+    _reposButton.hidden = true;
+    _notFoundLabel.hidden = true;
+}
+
+- (void)showDetails:(const User &)user {
+    _userNameLabel.text = djinni::String::fromCpp(user.login);
+    [_avatar sd_setImageWithURL:[NSURL URLWithString:djinni::String::fromCpp(user.avatar_url)]];
+    _createdLabel.text = [_dateFormatter stringFromDate:djinni::Date::fromCpp(user.created_at)];
+
+    _userNameLabel.hidden = false;
+    _createdLabel.hidden = false;
+    _avatar.hidden = false;
+    _reposButton.hidden = false;
+}
+
+- (IBAction) textFieldDidEndEditing:(UITextField *)textField {
+    if (_userInput.text.length) {
+        [_progress startAnimating];
+        [self hideDetails];
+
+        __weak auto welf = self;
+
+        auto x = Xptuto::make_instance(std::make_shared<AppleHttpClient>(), std::make_shared<AppleThreads>());
+        x->get_user(djinni::String::toCpp(_userInput.text), std::make_shared<GetUserCbImpl>(
+                [welf](const User &user) {
+                    [welf.progress stopAnimating];
+                    NSLog(@"Got user with login: %s", user.login.c_str());
+                    [welf showDetails:user];
+                }, [welf](const std::string &error) {
+                    NSLog(@"error: %s", error.c_str());
+                    [welf.progress stopAnimating];
+                    welf.notFoundLabel.hidden = false;
+                }));
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"repos"]) {
+        auto listVC = (ListViewController *) segue.destinationViewController;
+        listVC.userLogin = _userNameLabel.text;
+    }
+    [super prepareForSegue:segue sender:sender];
+}
 
 @end
