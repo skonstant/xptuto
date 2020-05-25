@@ -25,3 +25,7 @@ else (APPLE)
     add_library(xpcommon ${SRC} ${HDR} ${HDR_GEN})
 endif (APPLE)
 
+if (EMSCRIPTEN)
+    set_target_properties(xpcommon PROPERTIES COMPILE_FLAGS " -s USE_PTHREADS=1 -s DISABLE_EXCEPTION_CATCHING=0")
+endif(EMSCRIPTEN)
+

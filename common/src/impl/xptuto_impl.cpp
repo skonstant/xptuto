@@ -116,7 +116,9 @@ void XptutoImpl::get_repos_for_user_name(const std::string &username, const std:
                 user = me->storage.get_user(username);
                 auto repos = me->storage.get_repos(username);
                 if (!repos.empty()) {
-                    cb->on_success(repos, user.value());
+                    me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, repos, user]() {
+                        cb->on_success(repos, user.value());
+                    }));
                     repos = me->get_repos_sync(user.value());
                     me->storage.store_repos(repos);
                     return;
