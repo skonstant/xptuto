@@ -46,8 +46,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        x = Xptuto.makeInstance(new JavaHttpClient(getApplicationContext()), new AndroidThreads());
-
+        x = Xptuto.getInstance();
+        if (x == null) {
+            x = Xptuto.makeInstance(new JavaHttpClient(getApplicationContext()), new AndroidThreads(), getCacheDir().getAbsolutePath());
+        }
         progressBar = findViewById(R.id.progress);
         notFound = findViewById(R.id.notFound);
         details = findViewById(R.id.details);

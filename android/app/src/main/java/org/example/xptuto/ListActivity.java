@@ -44,11 +44,14 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        private final Xptuto x;
+        private Xptuto x;
         private List<Repo> repos;
 
         public MyAdapter(String userName) {
-            x = Xptuto.makeInstance(new JavaHttpClient(getApplicationContext()), new AndroidThreads());
+            x = Xptuto.getInstance();
+            if (x == null) {
+                x = Xptuto.makeInstance(new JavaHttpClient(getApplicationContext()), new AndroidThreads(), getCacheDir().getAbsolutePath());
+            }
             x.getReposForUserName(userName, new GetReposCb() {
                 @Override
                 public void onSuccess(ArrayList<Repo> r, User u) {

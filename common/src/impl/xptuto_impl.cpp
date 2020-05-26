@@ -30,7 +30,7 @@ std::shared_ptr<Xptuto> Xptuto::make_instance(const std::shared_ptr<HttpClient> 
     return XptutoImpl::instance;
 }
 
-std::shared_ptr<Xptuto> get_instance() {
+std::shared_ptr<Xptuto> Xptuto::get_instance() {
     return XptutoImpl::instance;
 }
 
