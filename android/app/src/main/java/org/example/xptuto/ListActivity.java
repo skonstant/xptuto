@@ -33,9 +33,9 @@ public class ListActivity extends AppCompatActivity {
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public final TextView name;
         public final TextView description;
-        public final TextView creationDate;
+        final TextView creationDate;
 
-        public MyViewHolder(View v) {
+        MyViewHolder(View v) {
             super(v);
             name = v.findViewById(R.id.name);
             description = v.findViewById(R.id.descr);
@@ -44,24 +44,27 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        private Xptuto x;
         private List<Repo> repos;
 
-        public MyAdapter(String userName) {
-            x = Xptuto.getInstance();
+        MyAdapter(String userName) {
+            Xptuto x = Xptuto.getInstance();
             if (x == null) {
                 x = Xptuto.makeInstance(new JavaHttpClient(getApplicationContext()), new AndroidThreads(), getCacheDir().getAbsolutePath());
             }
             x.getReposForUserName(userName, new GetReposCb() {
                 @Override
                 public void onSuccess(ArrayList<Repo> r, User u) {
-                    repos = r;
-                    notifyDataSetChanged();
+                    if (!isFinishing() && !isDestroyed()) {
+                        repos = r;
+                        notifyDataSetChanged();
+                    }
                 }
 
                 @Override
                 public void onError(String error) {
-                    finish();
+                    if (!isFinishing() && !isDestroyed()) {
+                        finish();
+                    }
                 }
             });
         }

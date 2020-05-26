@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -70,22 +69,24 @@ public class MainActivity extends AppCompatActivity {
                 x.getUser(v.getText().toString(), new GetUserCb() {
                     @Override
                     public void onSuccess(User user) {
-                        Log.d(TAG, "Got a user with name: " + user.login);
-                        progressBar.hide();
-                        details.setVisibility(View.VISIBLE);
-                        userName.setText(user.login);
-                        creationDate.setText(DateFormat.getDateInstance(
-                                DateFormat.MEDIUM, Locale.getDefault()).format(user.createdAt));
-                        avatar.setImageDrawable(null);
-                        Glide.with(MainActivity.this)
-                                .load(user.avatarUrl).into(avatar);
+                        if (!isFinishing() && !isDestroyed()) {
+                            progressBar.hide();
+                            details.setVisibility(View.VISIBLE);
+                            userName.setText(user.login);
+                            creationDate.setText(DateFormat.getDateInstance(
+                                    DateFormat.MEDIUM, Locale.getDefault()).format(user.createdAt));
+                            avatar.setImageDrawable(null);
+                            Glide.with(MainActivity.this)
+                                    .load(user.avatarUrl).into(avatar);
+                        }
                     }
 
                     @Override
                     public void onError(String error) {
-                        Log.e(TAG, "Error: " + error);
-                        progressBar.hide();
-                        notFound.setVisibility(View.VISIBLE);
+                        if (!isFinishing() && !isDestroyed()) {
+                            progressBar.hide();
+                            notFound.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
 
