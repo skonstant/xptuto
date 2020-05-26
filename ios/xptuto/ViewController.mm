@@ -58,7 +58,16 @@ using namespace xptuto;
 
         __weak auto welf = self;
 
-        auto x = Xptuto::make_instance(std::make_shared<AppleHttpClient>(), std::make_shared<AppleThreads>());
+        auto x = Xptuto::get_instance();
+
+        if (!x) {
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+            NSString *cacheDirectory = [paths objectAtIndex:0];
+
+            x = Xptuto::make_instance(std::make_shared<AppleHttpClient>(), std::make_shared<AppleThreads>(),
+                    djinni::String::toCpp(cacheDirectory));
+        }
+
         x->get_user(djinni::String::toCpp(_userInput.text), std::make_shared<GetUserCbImpl>(
                 [welf](const User &user) {
                     [welf.progress stopAnimating];
@@ -79,5 +88,23 @@ using namespace xptuto;
     }
     [super prepareForSegue:segue sender:sender];
 }
+
+
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+    [super encodeRestorableStateWithCoder:coder];
+    if (self.userNameLabel.text.length) {
+        [coder encodeObject:_userNameLabel.text forKey:USERNAME];
+    }
+}
+
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+    [super decodeRestorableStateWithCoder:coder];
+    if ([coder containsValueForKey:USERNAME]) {
+        _userInput.text = [coder decodeObjectForKey:USERNAME];
+        [self textFieldDidEndEditing:_userInput];
+    }
+}
+
+
 
 @end

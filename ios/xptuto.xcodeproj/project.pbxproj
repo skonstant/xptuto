@@ -16,11 +16,9 @@
 		F406110D247038BF0097FD26 /* get_user_cb_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F406110B247038BF0097FD26 /* get_user_cb_impl.cpp */; };
 		F41F4953247BD08E0017A1D3 /* sql_storage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F41F4950247BD08D0017A1D3 /* sql_storage.cpp */; };
 		F41F4954247BD08E0017A1D3 /* thread_func_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F41F4952247BD08E0017A1D3 /* thread_func_impl.cpp */; };
-		F448D3A7246F51DE002DBE83 /* get_users_cb_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F448D39F246F51DE002DBE83 /* get_users_cb_impl.cpp */; };
 		F448D3A8246F51DE002DBE83 /* apple_http_client.mm in Sources */ = {isa = PBXBuildFile; fileRef = F448D3A2246F51DE002DBE83 /* apple_http_client.mm */; };
 		F448D3A9246F51DE002DBE83 /* http_callback_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F448D3A4246F51DE002DBE83 /* http_callback_impl.cpp */; };
 		F4AB7909245E06E100043156 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = F4AB7908245E06E100043156 /* AppDelegate.mm */; };
-		F4AB790C245E06E100043156 /* SceneDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = F4AB790B245E06E100043156 /* SceneDelegate.mm */; };
 		F4AB790F245E06E100043156 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F4AB790E245E06E100043156 /* ViewController.mm */; };
 		F4AB7912245E06E100043156 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4AB7910245E06E100043156 /* Main.storyboard */; };
 		F4AB7914245E06E900043156 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4AB7913245E06E900043156 /* Assets.xcassets */; };
@@ -56,8 +54,6 @@
 		F41F4951247BD08E0017A1D3 /* sql_storage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sql_storage.hpp; sourceTree = "<group>"; };
 		F41F4952247BD08E0017A1D3 /* thread_func_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = thread_func_impl.cpp; sourceTree = "<group>"; };
 		F448D39C246F51DE002DBE83 /* json_parser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json_parser.hpp; sourceTree = "<group>"; };
-		F448D39E246F51DE002DBE83 /* get_users_cb_impl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = get_users_cb_impl.hpp; sourceTree = "<group>"; };
-		F448D39F246F51DE002DBE83 /* get_users_cb_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = get_users_cb_impl.cpp; sourceTree = "<group>"; };
 		F448D3A0246F51DE002DBE83 /* date.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = date.h; sourceTree = "<group>"; };
 		F448D3A2246F51DE002DBE83 /* apple_http_client.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = apple_http_client.mm; sourceTree = "<group>"; };
 		F448D3A3246F51DE002DBE83 /* apple_http_client.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = apple_http_client.hpp; sourceTree = "<group>"; };
@@ -74,8 +70,6 @@
 		F4AB7904245E06E100043156 /* xptuto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xptuto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4AB7907245E06E100043156 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F4AB7908245E06E100043156 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
-		F4AB790A245E06E100043156 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		F4AB790B245E06E100043156 /* SceneDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SceneDelegate.mm; sourceTree = "<group>"; };
 		F4AB790D245E06E100043156 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		F4AB790E245E06E100043156 /* ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewController.mm; sourceTree = "<group>"; };
 		F4AB7911245E06E100043156 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -145,8 +139,6 @@
 				F448D3A3246F51DE002DBE83 /* apple_http_client.hpp */,
 				F448D3A2246F51DE002DBE83 /* apple_http_client.mm */,
 				F448D3A0246F51DE002DBE83 /* date.h */,
-				F448D39F246F51DE002DBE83 /* get_users_cb_impl.cpp */,
-				F448D39E246F51DE002DBE83 /* get_users_cb_impl.hpp */,
 				F448D3A4246F51DE002DBE83 /* http_callback_impl.cpp */,
 				F448D3A5246F51DE002DBE83 /* http_callback_impl.hpp */,
 				F448D39C246F51DE002DBE83 /* json_parser.hpp */,
@@ -208,8 +200,6 @@
 			children = (
 				F4AB7907245E06E100043156 /* AppDelegate.h */,
 				F4AB7908245E06E100043156 /* AppDelegate.mm */,
-				F4AB790A245E06E100043156 /* SceneDelegate.h */,
-				F4AB790B245E06E100043156 /* SceneDelegate.mm */,
 				F4AB790D245E06E100043156 /* ViewController.h */,
 				F4AB790E245E06E100043156 /* ViewController.mm */,
 				F4AB7910245E06E100043156 /* Main.storyboard */,
@@ -330,7 +320,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F448D3A7246F51DE002DBE83 /* get_users_cb_impl.cpp in Sources */,
 				F41F4954247BD08E0017A1D3 /* thread_func_impl.cpp in Sources */,
 				F4AB790F245E06E100043156 /* ViewController.mm in Sources */,
 				F406110D247038BF0097FD26 /* get_user_cb_impl.cpp in Sources */,
@@ -339,7 +328,6 @@
 				F448D3A8246F51DE002DBE83 /* apple_http_client.mm in Sources */,
 				F41F4953247BD08E0017A1D3 /* sql_storage.cpp in Sources */,
 				F4AB791A245E06E900043156 /* main.mm in Sources */,
-				F4AB790C245E06E100043156 /* SceneDelegate.mm in Sources */,
 				552E8B9DA012EBD2A6E85A31 /* xptuto_impl.cpp in Sources */,
 				F448D3A9246F51DE002DBE83 /* http_callback_impl.cpp in Sources */,
 				552E8F1FCD470E5A7A5E350A /* apple_threads.mm in Sources */,

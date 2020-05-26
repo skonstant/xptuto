@@ -5,6 +5,8 @@
 
 #import <UIKit/UIKit.h>
 
+static NSString *const USERNAME = @"userName";
+
 @interface ListViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property NSString *userLogin;

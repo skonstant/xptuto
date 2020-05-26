@@ -27,19 +27,35 @@ using namespace xptuto;
     dateFormatter.dateStyle = NSDateFormatterMediumStyle;
     dateFormatter.timeStyle = NSDateFormatterNoStyle;
 
-    __weak auto welf = self;
+    [self get_repos];
+}
 
-    auto x = Xptuto::make_instance(std::make_shared<AppleHttpClient>(), std::make_shared<AppleThreads>());
-    x->get_repos_for_user_name(djinni::String::toCpp(_userLogin), std::make_shared<GetReposCbImpl>(
-            [welf](const std::vector<Repo> &r, const User &user) {
-                auto strongSelf = welf;
-                if (strongSelf) {
-                    strongSelf->repos = r;
-                }
-                [welf.tableView reloadData];
-            }, [welf](const std::string &error) {
+-(void) get_repos {
+    if (_userLogin) {
 
-            }));
+        auto x = Xptuto::get_instance();
+
+        if (!x) {
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+            NSString *cacheDirectory = [paths objectAtIndex:0];
+
+            x = Xptuto::make_instance(std::make_shared<AppleHttpClient>(), std::make_shared<AppleThreads>(),
+                    djinni::String::toCpp(cacheDirectory));
+        }
+
+        __weak auto welf = self;
+
+        x->get_repos_for_user_name(djinni::String::toCpp(_userLogin), std::make_shared<GetReposCbImpl>(
+                [welf](const std::vector<Repo> &r, const User &user) {
+                    auto strongSelf = welf;
+                    if (strongSelf) {
+                        strongSelf->repos = r;
+                    }
+                    [welf.tableView reloadData];
+                }, [welf](const std::string &error) {
+
+                }));
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -54,6 +70,19 @@ using namespace xptuto;
     cell.detailTextLabel.text = [dateFormatter stringFromDate:djinni::Date::fromCpp(repo.created_at)];
     return cell;
 
+}
+
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+    [super encodeRestorableStateWithCoder:coder];
+    if (self.userLogin.length) {
+        [coder encodeObject:_userLogin forKey:USERNAME];
+    }
+}
+
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+    [super decodeRestorableStateWithCoder:coder];
+    _userLogin = [coder decodeObjectForKey:USERNAME];
+    [self get_repos];
 }
 
 

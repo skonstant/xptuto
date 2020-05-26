@@ -70,14 +70,6 @@ void XptutoImpl::get_user(const std::string &login, const std::shared_ptr<GetUse
                 me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, user]() {
                     cb->on_success(user);
                 }));
-                try {
-                    auto userOpt = me->get_user_sync(login);
-                    if (userOpt) {
-                        me->storage.store_user(userOpt.value());
-                    }
-                } catch (...) {
-                    //PASS
-                }
             } catch (...) {
                 auto user = me->get_user_sync(login);
                 if (!user) {
