@@ -9,7 +9,7 @@ class UserView extends React.Component {
             return (
                 <div className="userDetails">
                     <p>Name: {user.login}</p>
-                    <p>Created on: {user.created_at.toString()}</p>
+                    <p>Created on: {new Date(user.created_at.millis()).toLocaleDateString()}</p>
                     <p><img className="avatar" alt="avatar" src={user.avatar_url}/></p>
                 </div>
             );

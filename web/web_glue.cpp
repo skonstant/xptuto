@@ -37,7 +37,7 @@ emscripten::class_<std::optional<V>> register_optional(const char *name) {
 
 emscripten::val toJsDate(std::chrono::system_clock::time_point timePoint) {
     return emscripten::val(
-            (long) (std::chrono::duration_cast<std::chrono::seconds>(timePoint.time_since_epoch())).count());
+            (double) (std::chrono::duration_cast<std::chrono::milliseconds>(timePoint.time_since_epoch())).count());
 }
 
 std::shared_ptr<xptuto::Xptuto> createInstance() {
@@ -95,7 +95,7 @@ EMSCRIPTEN_BINDINGS(xptuto) {
     emscripten::function("createInstance", &createInstance);
 
     emscripten::class_<std::chrono::system_clock::time_point>("TimePoint")
-            .function("sec", &toJsDate);
+            .function("millis", &toJsDate);
 
     emscripten::class_<User>("User")
             .property("login", &User::login)
