@@ -26,4 +26,12 @@ https://medium.com/swlh/cross-platform-mobile-and-web-development-with-c-explain
 
 https://medium.com/swlh/cross-platform-mobile-and-web-development-with-c-explained-e8cd420665af
 
+## Part 5: Multi-threading
+
+https://levelup.gitconnected.com/cross-platform-mobile-and-web-development-with-c-explained-94e112d31351
+
+## Part 6: SQLite integration
+
+https://medium.com/@stephane_21545/cross-platform-mobile-and-web-development-with-c-explained-7076b84c425b
+
 
