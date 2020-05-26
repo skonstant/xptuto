@@ -61,8 +61,7 @@ using namespace xptuto;
         auto x = Xptuto::get_instance();
 
         if (!x) {
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-            NSString *cacheDirectory = [paths objectAtIndex:0];
+            auto cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, true) lastObject];
 
             x = Xptuto::make_instance(std::make_shared<AppleHttpClient>(), std::make_shared<AppleThreads>(),
                     djinni::String::toCpp(cacheDirectory));
