@@ -17,7 +17,7 @@ void SQLStorage::store_user(const User &user) {
     storage.replace(user);
 }
 
-void SQLStorage::store_repos(const std::vector<xptuto::Repo> &repos) {
+void SQLStorage::store_repos(const std::vector<Repo> &repos) {
     auto &s = storage;
     storage.transaction([&s, &repos] {
         for (const auto &repo : repos) {
@@ -27,12 +27,12 @@ void SQLStorage::store_repos(const std::vector<xptuto::Repo> &repos) {
     });
 }
 
-xptuto::User SQLStorage::get_user(const std::string &login) {
+User SQLStorage::get_user(const std::string &login) {
     auto allUsersList = storage.get_all<User, std::vector<User>>(where(c(&User::login) == login));
     return allUsersList.at(0);
 }
 
-std::vector<xptuto::Repo> SQLStorage::get_repos(const std::string &userName) {
+std::vector<Repo> SQLStorage::get_repos(const std::string &userName) {
     auto allUsersList = storage.get_all<User, std::vector<User>>(where(c(&User::login) == userName));
     auto u = allUsersList.at(0);
     return storage.get_all<Repo, std::vector<Repo>>(where(c(&Repo::owner) == u.id));
