@@ -13,7 +13,9 @@ struct User;
 
 class GetReposCb {
 public:
-    virtual ~GetReposCb() {}
+    virtual ~GetReposCb() {
+        printf("GetRepos destructor\n");
+    }
 
     virtual void on_success(const std::vector<Repo> & repos, const User & u) = 0;
 

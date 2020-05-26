@@ -8,16 +8,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class Xptuto {
     public abstract void getUser(String login, GetUserCb cb);
 
-    public abstract void getUsers(GetUsersCb cb);
-
     public abstract void getReposForUser(User usr, GetReposCb cb);
 
     public abstract void getReposForUserName(String username, GetReposCb cb);
 
-    public static Xptuto makeInstance(HttpClient client, PlatformThreads threads)
+    public static Xptuto makeInstance(HttpClient client, PlatformThreads threads, String cachePath)
     {
         return CppProxy.makeInstance(client,
-                                     threads);
+                                     threads,
+                                     cachePath);
+    }
+
+    /**throw exception if not initialized */
+    public static Xptuto getInstance()
+    {
+        return CppProxy.getInstance();
     }
 
     private static final class CppProxy extends Xptuto
@@ -52,14 +57,6 @@ public abstract class Xptuto {
         private native void native_getUser(long _nativeRef, String login, GetUserCb cb);
 
         @Override
-        public void getUsers(GetUsersCb cb)
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_getUsers(this.nativeRef, cb);
-        }
-        private native void native_getUsers(long _nativeRef, GetUsersCb cb);
-
-        @Override
         public void getReposForUser(User usr, GetReposCb cb)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
@@ -75,6 +72,8 @@ public abstract class Xptuto {
         }
         private native void native_getReposForUserName(long _nativeRef, String username, GetReposCb cb);
 
-        public static native Xptuto makeInstance(HttpClient client, PlatformThreads threads);
+        public static native Xptuto makeInstance(HttpClient client, PlatformThreads threads, String cachePath);
+
+        public static native Xptuto getInstance();
     }
 }

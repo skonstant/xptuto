@@ -9,7 +9,6 @@
 #include <xptuto.hpp>
 #include <user.hpp>
 #include <repo.hpp>
-#include <get_users_cb_impl.hpp>
 #include <get_user_cb_impl.hpp>
 #include <get_repos_cb_impl.hpp>
 #include "thread_func_impl.hpp"
@@ -118,7 +117,7 @@ TEST_F(WebXptuto, WebMainThreadTest) {
 
 TEST_F(WebXptuto, GetUserAndReposTest) {
     auto webThreads = std::make_shared<WebThreads>();
-    auto instance = ::xptuto::Xptuto::make_instance(std::make_shared<WebHttpClient>(), webThreads);
+    auto instance = ::xptuto::Xptuto::make_instance(std::make_shared<WebHttpClient>(), webThreads, std::nullopt);
 
     auto p = promise;
 

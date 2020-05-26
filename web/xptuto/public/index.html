@@ -28,10 +28,14 @@
     <script>
       var Module = {
         onRuntimeInitialized: function() {
-          window.xptuto = Module.createInstance();
+          FS.mkdir('/cache');
+          FS.mount(IDBFS, {}, '/cache');
+
+          FS.syncfs(true, function (err) {
+            window.xptuto = Module.createInstance();
+          });
         }
       };
-
     </script>
     <script src="%PUBLIC_URL%/xptuto-web.js"></script>
   </head>

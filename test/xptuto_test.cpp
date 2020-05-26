@@ -8,7 +8,6 @@
 #include <repo.hpp>
 #include "stubs/http_client_stub.hpp"
 #include "stubs/platform_threads_stub.hpp"
-#include <get_users_cb_impl.hpp>
 #include <get_user_cb_impl.hpp>
 #include <get_repos_cb_impl.hpp>
 #include "thread_func_impl.hpp"
@@ -35,11 +34,11 @@ protected:
 
 
 TEST_F(Xptuto, MakeInstanceTest) {
-    EXPECT_FALSE(::xptuto::Xptuto::make_instance(stubHttp, stubThreads) == nullptr);
+    EXPECT_FALSE(::xptuto::Xptuto::make_instance(stubHttp, stubThreads, std::nullopt) == nullptr);
 }
 
 TEST_F(Xptuto, GetUserTest) {
-    auto instance = ::xptuto::Xptuto::make_instance(stubHttp, stubThreads);
+    auto instance = ::xptuto::Xptuto::make_instance(stubHttp, stubThreads, std::nullopt);
 
     stubHttp->path = "/responses/users_aosp.json";
 
@@ -59,7 +58,7 @@ TEST_F(Xptuto, GetUserTest) {
 }
 
 TEST_F(Xptuto, GetReposTest) {
-    auto instance = ::xptuto::Xptuto::make_instance(stubHttp, stubThreads);
+    auto instance = ::xptuto::Xptuto::make_instance(stubHttp, stubThreads, std::nullopt);
     stubHttp->path = "/responses/users_aosp.json";
 
     auto p = promise;
@@ -91,7 +90,7 @@ TEST_F(Xptuto, GetReposTest) {
 }
 
 TEST_F(Xptuto, GetUserSyncTest) {
-    auto instance = std::make_shared<XptutoImpl>(stubHttp, stubThreads);
+    auto instance = std::make_shared<XptutoImpl>(stubHttp, stubThreads, std::nullopt);
     stubHttp->path = "/responses/users_aosp.json";
 
     auto user = instance->get_user_sync("aosp");
@@ -99,7 +98,7 @@ TEST_F(Xptuto, GetUserSyncTest) {
 }
 
 TEST_F(Xptuto, GetRepoSyncTest) {
-    auto instance = std::make_shared<XptutoImpl>(stubHttp, stubThreads);
+    auto instance = std::make_shared<XptutoImpl>(stubHttp, stubThreads, std::nullopt);
     stubHttp->path = "/responses/users_aosp.json";
 
     auto user = instance->get_user_sync("aosp");
@@ -146,12 +145,12 @@ TEST_F(Xptuto, CheckSqliteTest) {
 }
 
 TEST_F(Xptuto, OrmTest) {
-    auto instance = std::make_shared<XptutoImpl>(stubHttp, stubThreads);
+    auto instance = std::make_shared<XptutoImpl>(stubHttp, stubThreads, std::nullopt);
     stubHttp->path = "/responses/users_aosp.json";
 
     auto user = instance->get_user_sync("aosp");
 
-    auto storage = SQLStorage(":memory:");
+    auto storage = SQLStorage("/home/stephane/db.sqlite");
     storage.store_user(*user);
     auto u = storage.get_user("aosp");
     EXPECT_EQ(u.created_at, user->created_at);

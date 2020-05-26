@@ -16,7 +16,7 @@ struct User final {
     std::string avatar_url;
     std::chrono::system_clock::time_point created_at;
 
-    User(){};
+    User() = default;
 
     User(std::string login_,
          int32_t id_,

@@ -4,13 +4,13 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <string>
 
 namespace xptuto {
 
 class GetReposCb;
 class GetUserCb;
-class GetUsersCb;
 class HttpClient;
 class PlatformThreads;
 struct User;
@@ -19,11 +19,12 @@ class Xptuto {
 public:
     virtual ~Xptuto() {}
 
-    static std::shared_ptr<Xptuto> make_instance(const std::shared_ptr<HttpClient> & client, const std::shared_ptr<PlatformThreads> & threads);
+    static std::shared_ptr<Xptuto> make_instance(const std::shared_ptr<HttpClient> & client, const std::shared_ptr<PlatformThreads> & threads, const std::optional<std::string> & cache_path);
+
+    /**throw exception if not initialized */
+    static std::shared_ptr<Xptuto> get_instance();
 
     virtual void get_user(const std::string & login, const std::shared_ptr<GetUserCb> & cb) = 0;
-
-    virtual void get_users(const std::shared_ptr<GetUsersCb> & cb) = 0;
 
     virtual void get_repos_for_user(const User & usr, const std::shared_ptr<GetReposCb> & cb) = 0;
 

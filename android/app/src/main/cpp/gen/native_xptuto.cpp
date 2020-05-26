@@ -5,7 +5,6 @@
 #include "Marshal.hpp"
 #include "native_get_repos_cb.hpp"
 #include "native_get_user_cb.hpp"
-#include "native_get_users_cb.hpp"
 #include "native_http_client.hpp"
 #include "native_platform_threads.hpp"
 #include "native_user.hpp"
@@ -25,12 +24,22 @@ CJNIEXPORT void JNICALL Java_org_example_xptuto_Xptuto_00024CppProxy_nativeDestr
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jobject JNICALL Java_org_example_xptuto_Xptuto_00024CppProxy_makeInstance(JNIEnv* jniEnv, jobject /*this*/, jobject j_client, jobject j_threads)
+CJNIEXPORT jobject JNICALL Java_org_example_xptuto_Xptuto_00024CppProxy_makeInstance(JNIEnv* jniEnv, jobject /*this*/, jobject j_client, jobject j_threads, jstring j_cachePath)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::xptuto::Xptuto::make_instance(::djinni_generated::NativeHttpClient::toCpp(jniEnv, j_client),
-                                                 ::djinni_generated::NativePlatformThreads::toCpp(jniEnv, j_threads));
+                                                 ::djinni_generated::NativePlatformThreads::toCpp(jniEnv, j_threads),
+                                                 ::djinni::Optional<std::optional, ::djinni::String>::toCpp(jniEnv, j_cachePath));
+        return ::djinni::release(::djinni_generated::NativeXptuto::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_org_example_xptuto_Xptuto_00024CppProxy_getInstance(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::xptuto::Xptuto::get_instance();
         return ::djinni::release(::djinni_generated::NativeXptuto::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
@@ -42,15 +51,6 @@ CJNIEXPORT void JNICALL Java_org_example_xptuto_Xptuto_00024CppProxy_native_1get
         const auto& ref = ::djinni::objectFromHandleAddress<::xptuto::Xptuto>(nativeRef);
         ref->get_user(::djinni::String::toCpp(jniEnv, j_login),
                       ::djinni_generated::NativeGetUserCb::toCpp(jniEnv, j_cb));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
-}
-
-CJNIEXPORT void JNICALL Java_org_example_xptuto_Xptuto_00024CppProxy_native_1getUsers(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_cb)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::xptuto::Xptuto>(nativeRef);
-        ref->get_users(::djinni_generated::NativeGetUsersCb::toCpp(jniEnv, j_cb));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 

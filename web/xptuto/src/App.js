@@ -14,7 +14,7 @@ class UserView extends React.Component {
                 </div>
             );
         } else {
-            return <div></div>
+            return null;
         }
     }
 }
@@ -35,7 +35,7 @@ class ReposView extends React.Component {
                 </div>
             );
         } else {
-            return <div></div>
+            return null;
         }
     }
 }
@@ -57,15 +57,23 @@ class NameForm extends React.Component {
     handleSubmit(event) {
         if (this.state && this.state.value && this.state.value.length > 0) {
             if (!this.callback) {
-                var that = this;
                 // eslint-disable-next-line no-undef
                 this.callback = new Module.JSGetReposCb({
-                    on_error: function (error) {
-                        console.error(error)
-                    },
-                    on_success: function (repos, user) {
-                        that.props.onUserChange(user);
-                        that.props.onReposChange(repos);
+                    on_error: (error) => console.error(error),
+                    on_success: (repos, user) => {
+                        this.props.onUserChange(user);
+                        this.props.onReposChange(repos);
+
+                        // eslint-disable-next-line no-undef
+                        FS.syncfs(function (err) {
+                            if (err) {
+                                console.error("error FS sync", err);
+                            } else {
+                                console.log("FS sync successful");
+                            }
+                        });
+
+
                     }
                 });
             }
@@ -97,16 +105,12 @@ class App extends React.Component {
         this.handleReposChange = this.handleReposChange.bind(this)
     }
 
-    getInitialState() {
-        return {currentUser: null};
-    }
-
     handleUserChange(user) {
-        this.setState({currentUser: user, currentRepos: this.state.currentRepos});
+        this.setState({currentUser: user});
     }
 
     handleReposChange(repos) {
-        this.setState({currentUser: this.state.currentUser, currentRepos: repos});
+        this.setState({currentRepos: repos});
     }
 
     render() {

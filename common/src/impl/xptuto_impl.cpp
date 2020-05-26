@@ -10,7 +10,6 @@
 
 #include "http_client.hpp"
 #include "http_callback_impl.hpp"
-#include "get_users_cb.hpp"
 #include "get_repos_cb.hpp"
 #include "get_user_cb.hpp"
 #include "json_parser.hpp"
@@ -25,26 +24,20 @@ void XptutoImpl::check_sqlite3() {
     printf("sqlite version : %s", sqlite3_libversion());
 }
 
-std::shared_ptr<Xptuto> xptuto::Xptuto::make_instance(const std::shared_ptr<HttpClient> &client,
-        const std::shared_ptr<PlatformThreads> & threads) {
-    if (!XptutoImpl::instance) {
-        XptutoImpl::instance = std::make_shared<XptutoImpl>(client, threads);
-    }
-
+std::shared_ptr<Xptuto> Xptuto::make_instance(const std::shared_ptr<HttpClient> &client,
+        const std::shared_ptr<PlatformThreads> & threads, const std::optional<std::string> &cache_path) {
+    XptutoImpl::instance = std::make_shared<XptutoImpl>(client, threads, cache_path);
     return XptutoImpl::instance;
 }
 
-XptutoImpl::XptutoImpl(std::shared_ptr<xptuto::HttpClient> cl, std::shared_ptr<PlatformThreads> threads) : client(
-        std::move(cl)),
-                                                                                                           threads(std::move(
-                                                                                                                   threads)),
-                                                                                                           storage(":memory:") {}
-
-void XptutoImpl::get_users(const std::shared_ptr<GetUsersCb> &cb) {
-    // no local users fror now
-    cb->on_success({});
+std::shared_ptr<Xptuto> get_instance() {
+    return XptutoImpl::instance;
 }
 
+XptutoImpl::XptutoImpl(std::shared_ptr<HttpClient> cl, std::shared_ptr<PlatformThreads> threads, const std::optional<std::string> &cache_path) :
+        client(std::move(cl)), threads(std::move(threads)),
+        storage(cache_path ? (cache_path.value() + "/cache.sqlite") : ":memory:") {}
+                                                                                                           
 void XptutoImpl::get_repos_for_user(const User &user, const std::shared_ptr<GetReposCb> &cb) {
     auto me = shared_from_this();
 
@@ -106,7 +99,7 @@ void XptutoImpl::get_user(const std::string &login, const std::shared_ptr<GetUse
     }));
 }
 
-void XptutoImpl::get_repos_for_user_name(const std::string &username, const std::shared_ptr<xptuto::GetReposCb> &cb) {
+void XptutoImpl::get_repos_for_user_name(const std::string &username, const std::shared_ptr<GetReposCb> &cb) {
     auto me = shared_from_this();
 
     threads->create_thread("get_repos_for_user_name", std::make_shared<ThreadFuncImpl>([me, cb, username](){
@@ -119,16 +112,14 @@ void XptutoImpl::get_repos_for_user_name(const std::string &username, const std:
                     me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, repos, user]() {
                         cb->on_success(repos, user.value());
                     }));
-                    repos = me->get_repos_sync(user.value());
-                    me->storage.store_repos(repos);
                     return;
                 } else {
                     try {
                         repos = me->get_repos_sync(user.value());
+                        me->storage.store_repos(repos);
                         me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, repos, user]() {
                             cb->on_success(repos, user.value());
                         }));
-                        me->storage.store_repos(repos);
                     } catch (...) {
                         me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, user]() {
                             cb->on_error("could not load repos for user: " + user->login);
@@ -141,10 +132,10 @@ void XptutoImpl::get_repos_for_user_name(const std::string &username, const std:
                     me->storage.store_user(user.value());
                     try {
                         auto repos = me->get_repos_sync(user.value());
+                        me->storage.store_repos(repos);
                         me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, repos, user]() {
                             cb->on_success(repos, user.value());
                         }));
-                        me->storage.store_repos(repos);
                     } catch (...) {
                         me->threads->run_on_main_thread(std::make_shared<ThreadFuncImpl>([cb, user]() {
                             cb->on_error("could not load repos for user: " + user->login);
@@ -164,7 +155,7 @@ void XptutoImpl::get_repos_for_user_name(const std::string &username, const std:
     }));
 }
 
-std::optional<xptuto::User> XptutoImpl::get_user_sync(const std::string &login) {
+std::optional<User> XptutoImpl::get_user_sync(const std::string &login) {
     auto response = client->get_sync("https://api.github.com/users/" + login);
     if (response.code == 200 && response.body && !std::empty(response.body.value())) {
         return nlohmann::json::parse(response.body.value());
@@ -173,7 +164,7 @@ std::optional<xptuto::User> XptutoImpl::get_user_sync(const std::string &login) 
     }
 }
 
-std::vector<xptuto::Repo> XptutoImpl::get_repos_sync(const User &user) {
+std::vector<Repo> XptutoImpl::get_repos_sync(const User &user) {
     auto response = client->get_sync("https://api.github.com/users/" + user.login + "/repos");
     if (response.body && !std::empty(response.body.value())) {
         return nlohmann::json::parse(response.body.value());

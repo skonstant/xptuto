@@ -5,9 +5,9 @@
 #include <user.hpp>
 #include <repo.hpp>
 #include <xptuto.hpp>
-#include <get_users_cb.hpp>
 #include <get_user_cb.hpp>
 #include <get_repos_cb.hpp>
+#include <filesystem>
 
 #include "web_http_client.hpp"
 #include "web_threads.hpp"
@@ -41,7 +41,12 @@ emscripten::val toJsDate(std::chrono::system_clock::time_point timePoint) {
 }
 
 std::shared_ptr<xptuto::Xptuto> createInstance() {
-    return xptuto::Xptuto::make_instance(std::make_shared<WebHttpClient>(), std::make_shared<WebThreads>());
+    const static auto dirname = "/cache";
+
+    if (!std::filesystem::exists(dirname)) {
+        std::filesystem::create_directory(dirname);
+    }
+    return xptuto::Xptuto::make_instance(std::make_shared<WebHttpClient>(), std::make_shared<WebThreads>(), dirname);
 }
 
 class JSInterface {
@@ -50,21 +55,6 @@ public:
     explicit JSInterface(emscripten::val callbacks) : myCallbacks(callbacks) {}
 
     emscripten::val myCallbacks;
-};
-
-class JSGetUsersCb : public xptuto::GetUsersCb, JSInterface {
-public:
-    explicit JSGetUsersCb(emscripten::val callbacks) : JSInterface(std::move(callbacks)) {}
-
-    void on_success(const std::vector<User> &users) override {
-        emscripten::val on_successCB = myCallbacks["on_success"];
-        on_successCB(users);
-    }
-
-    void on_error(const std::string &error) override {
-        emscripten::val on_errorCB = myCallbacks["on_error"];
-        on_errorCB(error);
-    }
 };
 
 class JSGetUserCb : public xptuto::GetUserCb, JSInterface {
@@ -124,16 +114,9 @@ EMSCRIPTEN_BINDINGS(xptuto) {
 
     emscripten::class_<Xptuto>("Xptuto")
             .smart_ptr<std::shared_ptr<Xptuto>>("Xptuto")
-            .function("get_users", &Xptuto::get_users)
             .function("get_user", &Xptuto::get_user)
             .function("get_repos_for_user", &Xptuto::get_repos_for_user)
             .function("get_repos_for_user_name", &Xptuto::get_repos_for_user_name);
-
-    emscripten::class_<GetUsersCb>("GetUsersCb")
-            .smart_ptr<std::shared_ptr<GetUsersCb>>("GetUsersCb");
-
-    emscripten::class_<JSGetUsersCb, emscripten::base<GetUsersCb>>("JSGetUsersCb")
-            .smart_ptr_constructor("JSGetUsersCb", &std::make_shared<JSGetUsersCb, emscripten::val>);
 
     emscripten::class_<GetUserCb>("GetUserCb")
             .smart_ptr<std::shared_ptr<GetUserCb>>("GetUserCb");

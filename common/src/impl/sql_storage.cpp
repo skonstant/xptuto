@@ -9,7 +9,7 @@
 using namespace sqlite_orm;
 using namespace xptuto;
 
-SQLStorage::SQLStorage(std::string dbFile) : dbFile(std::move(dbFile)), storage(initStorage(dbFile)) {
+SQLStorage::SQLStorage(const std::string& dbFile) : storage(initStorage(dbFile)) {
     storage.sync_schema();
 }
 

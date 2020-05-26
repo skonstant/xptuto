@@ -78,7 +78,7 @@ using Storage = decltype(initStorage(""));
 
 class SQLStorage {
 public:
-    explicit SQLStorage(std::string dbFile);
+    explicit SQLStorage(const std::string& dbFile);
 
     void store_user(const xptuto::User &user);
 
@@ -89,7 +89,6 @@ public:
     std::vector<xptuto::Repo> get_repos(const std::string &userName);
 
 private:
-    const std::string dbFile;
     Storage storage;
 };
 
