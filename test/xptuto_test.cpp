@@ -151,7 +151,7 @@ TEST_F(Xptuto, OrmTest) {
     auto user = instance->get_user_sync("aosp");
 
     auto storage = SQLStorage(":memory:");
-    storage.store_user(*user);
+    storage.store_user(user.value());
     auto u = storage.get_user("aosp");
     EXPECT_EQ(u.created_at, user->created_at);
     EXPECT_EQ(u.login, "aosp");
